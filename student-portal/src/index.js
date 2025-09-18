@@ -10,9 +10,11 @@ import Marketplace from './pages/Marketplace';
 import Carpool from './pages/Carpool';
 import Events from './pages/Events';
 import LostFound from './pages/LostFound';
-import Roommates from './pages/Roommates';
-import Vacancies from './pages/Vacancies';
+import FindMyStay from './pages/FindMyStay';
 import Admin from './pages/Admin';
+import About from './pages/About';
+import Developer from './pages/Developer';
+import Plans from './pages/Plans';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -28,8 +30,12 @@ root.render(
           <Route path="/carpool" element={<Carpool />} />
           <Route path="/events" element={<Events />} />
           <Route path="/lostfound" element={<LostFound />} />
-          <Route path="/roommates" element={<Roommates />} />
-          <Route path="/vacancies" element={<Vacancies />} />
+          <Route path="/findmystay" element={<FindMyStay />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/developer" element={<Developer />} />
+          <Route path="/plans" element={<Plans />} />
+          <Route path="/roommates" element={<Navigate to="/findmystay" replace />} />
+          <Route path="/vacancies" element={<Navigate to="/findmystay" replace />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin" element={
             <ProtectedRoute>

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiHome, FiShoppingCart, FiUsers, FiCalendar, FiSearch, FiUserCheck, FiPlus, FiLock, FiClock } from 'react-icons/fi';
-import { FaCarSide } from 'react-icons/fa';
+import { FiHome, FiShoppingCart, FiUsers, FiCalendar, FiSearch, FiUserCheck, FiPlus, FiLock } from 'react-icons/fi';
 import './dashbaord.css';
 
 export default function Home() {
@@ -10,10 +9,74 @@ export default function Home() {
     const [submittedMsg, setSubmittedMsg] = useState('');
     const [count, setCount] = useState(0);
     const LIMIT = 800;
-    const [filter, setFilter] = useState('all');
-    const [loadingFeed, setLoadingFeed] = useState(true);
+
     const [showChooser, setShowChooser] = useState(false);
     const [postingMode, setPostingMode] = useState(null); // null until user chooses Confessions
+    // Right panel quick data and UI state
+    const lostItems = [
+        { title: 'Blue water bottle', status: 'Found', location: 'Library foyer', time: '2h ago', contact: '98765 43210' },
+        { title: 'Black wallet', status: 'Lost', location: 'Cafeteria', time: 'Today 3:10 PM', contact: '—' },
+        { title: 'USB drive', status: 'Found', location: 'Lab 3', time: 'Yesterday', contact: '—' },
+        { title: 'Maths notebook', status: 'Found', location: 'Seminar Hall', time: '30m ago', contact: '—' },
+    ];
+    const trips = [
+        { start: 'Campus Gate', end: 'Solan', time: '6:00 PM' },
+        { start: 'Admin Block', end: 'Shimla', time: '7:30 AM' },
+        { start: 'Bus Stand', end: 'Dharampur', time: '5:15 PM' },
+        { start: 'Library', end: 'Kandaghat', time: '8:00 PM' },
+    ];
+    const [lfFlipped, setLfFlipped] = useState(false);
+    const [lfIdx, setLfIdx] = useState(0);
+    const [cpFlipped, setCpFlipped] = useState(false);
+    const [cpIdx, setCpIdx] = useState(0);
+
+    // Auto-fit heights for right-panel flip cards
+    const lfInnerRef = useRef(null);
+    const lfFrontRef = useRef(null);
+    const lfBackRef = useRef(null);
+    const cpInnerRef = useRef(null);
+    const cpFrontRef = useRef(null);
+    const cpBackRef = useRef(null);
+
+    const updateLfHeight = () => {
+        const inner = lfInnerRef.current;
+        if (!inner) return;
+        const activeFace = (lfFlipped ? lfBackRef.current : lfFrontRef.current);
+        if (activeFace) {
+            const h = activeFace.scrollHeight;
+            inner.style.height = h + 'px';
+        }
+    };
+    const updateCpHeight = () => {
+        const inner = cpInnerRef.current;
+        if (!inner) return;
+        const activeFace = (cpFlipped ? cpBackRef.current : cpFrontRef.current);
+        if (activeFace) {
+            const h = activeFace.scrollHeight;
+            inner.style.height = h + 'px';
+        }
+    };
+
+    useEffect(() => {
+        // initialize heights after first paint
+        const id = requestAnimationFrame(() => {
+            updateLfHeight();
+            updateCpHeight();
+        });
+        const onResize = () => {
+            updateLfHeight();
+            updateCpHeight();
+        };
+        window.addEventListener('resize', onResize);
+        return () => {
+            cancelAnimationFrame(id);
+            window.removeEventListener('resize', onResize);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => { updateLfHeight(); }, [lfFlipped, lfIdx, lostItems]);
+    useEffect(() => { updateCpHeight(); }, [cpFlipped, cpIdx, trips]);
 
     const exec = (cmd, value = null) => {
         // text-only: allow formatting but no images
@@ -44,11 +107,7 @@ export default function Home() {
         setCount(text.length);
     };
 
-    useEffect(() => {
-        // mock feed loading
-        const t = setTimeout(() => setLoadingFeed(false), 900);
-        return () => clearTimeout(t);
-    }, []);
+    // Note: In future we can add feed loading here.
 
     const handleSubmit = () => {
         const text = getPlainText();
@@ -76,6 +135,11 @@ export default function Home() {
             <header className="topbar">
                 <div className="brand" title="Home">Shoolini Central</div>
                 <div className="topbar-spacer" />
+                <div className="topbar-actions">
+                    <NavLink to="/about" className="hbtn">About</NavLink>
+                    <NavLink to="/developer" className="hbtn">Developer</NavLink>
+                    <NavLink to="/plans" className="hbtn">Plans</NavLink>
+                </div>
             </header>
             <div className={`layout ${collapsed ? 'sidebar-hidden' : ''}`}>
                 {/* Floating navigation toggle like Reddit (in the gutter between columns) */}
@@ -94,8 +158,7 @@ export default function Home() {
                         <li><NavLink to="/carpool" className={({ isActive }) => isActive ? 'active' : ''} title="Carpool"><span className="icon"><FiUsers /></span><span className="hide-when-collapsed">Carpool</span></NavLink></li>
                         <li><NavLink to="/events" className={({ isActive }) => isActive ? 'active' : ''} title="Events & Notices"><span className="icon"><FiCalendar /></span><span className="hide-when-collapsed">Events & Notices</span></NavLink></li>
                         <li><NavLink to="/lostfound" className={({ isActive }) => isActive ? 'active' : ''} title="Lost & Found"><span className="icon"><FiSearch /></span><span className="hide-when-collapsed">Lost & Found</span></NavLink></li>
-                        <li><NavLink to="/roommates" className={({ isActive }) => isActive ? 'active' : ''} title="Roommate Finder"><span className="icon"><FiUserCheck /></span><span className="hide-when-collapsed">Roommate Finder</span></NavLink></li>
-                        <li><NavLink to="/vacancies" className={({ isActive }) => isActive ? 'active' : ''} title="Vacant Rooms"><span className="icon"><FiHome /></span><span className="hide-when-collapsed">Vacant Rooms</span></NavLink></li>
+                        <li><NavLink to="/findmystay" className={({ isActive }) => isActive ? 'active' : ''} title="Find My Stay"><span className="icon"><FiUserCheck /></span><span className="hide-when-collapsed">Find My Stay</span></NavLink></li>
                     </ul>
                 </aside>
 
@@ -138,10 +201,7 @@ export default function Home() {
                                         <FiLock /> Carpool
                                     </button>
                                     <button className="chooser-item" disabled title="Coming soon">
-                                        <FiLock /> Room Vacancy
-                                    </button>
-                                    <button className="chooser-item" disabled title="Coming soon">
-                                        <FiLock /> Roommate Finder
+                                        <FiLock /> Find My Stay
                                     </button>
                                 </div>
                             )}
@@ -185,36 +245,16 @@ export default function Home() {
                             )}
                         </div>
 
-                        {/* Placeholder feed card */}
+                        {/* Confessions-only feed with empty placeholder for now */}
                         <div className="card">
-                            <div className="filters">
-                                {['all', 'marketplace', 'events', 'lostfound'].map(f => (
-                                    <button key={f} className={`pill ${filter === f ? 'active' : ''}`} onClick={() => setFilter(f)}>
-                                        {f === 'all' && 'All'}
-                                        {f === 'marketplace' && 'Marketplace'}
-                                        {f === 'events' && 'Events'}
-                                        {f === 'lostfound' && 'Lost & Found'}
-                                    </button>
-                                ))}
+                            <div className="card-head">
+                                <h3>Confessions</h3>
                             </div>
-                            <h3 style={{ margin: '4px 6px 10px' }}>Recent Posts</h3>
-                            {loadingFeed ? (
-                                <div>
-                                    <div className="skeleton-card" style={{ marginTop: 8 }}>
-                                        <div className="sk-line sk-title"></div>
-                                        <div className="sk-line sk-wide"></div>
-                                        <div className="sk-line sk-mid"></div>
-                                        <div className="sk-line sk-narrow"></div>
-                                    </div>
-                                    <div className="skeleton-card" style={{ marginTop: 12 }}>
-                                        <div className="sk-line sk-title"></div>
-                                        <div className="sk-line sk-wide"></div>
-                                        <div className="sk-line sk-mid"></div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <p className="muted">Coming soon: a feed of verified posts.</p>
-                            )}
+                            <div className="empty">
+                                <div className="big">🤫</div>
+                                <p>No confessions yet. Your secret’s safe… for now.</p>
+                                <p className="muted">Tap “Post” above to whisper to the campus.</p>
+                            </div>
                         </div>
                     </div>
                 </main>
@@ -222,47 +262,90 @@ export default function Home() {
                 {/* Right Column */}
                 <aside className="right">
                     <div className="card">
-                        <h3 style={{ margin: '4px 6px 10px' }}>Lost &amp; Found</h3>
-                        <ul className="mini-list">
-                            <li>
-                                <span className="badge found">Found</span>
-                                Blue water bottle near library
-                            </li>
-                            <li>
-                                <span className="badge lost">Lost</span>
-                                Black wallet in cafeteria
-                            </li>
-                            <li>
-                                <span className="badge found">Found</span>
-                                USB drive at lab 3
-                            </li>
-                        </ul>
-                        <div className="mini-actions">
-                            <NavLink to="/lostfound" className="muted">View all →</NavLink>
+                        <div className="card-head">
+                            <h3>Lost &amp; Found</h3>
+                            <NavLink to="/lostfound" className="inline-link">View all</NavLink>
+                        </div>
+                        <div className={`lf-card ${lfFlipped ? 'is-flipped' : ''}`}>
+                            <div className="lf-inner" ref={lfInnerRef}>
+                                <div className="lf-front" ref={lfFrontRef}>
+                                    <ul className="mini-list">
+                                        {lostItems.map((it, i) => (
+                                            <li key={i} className="clickable lf-item" onClick={() => { setLfIdx(i); setLfFlipped(true); }}>
+                                                <span className={`badge ${it.status.toLowerCase()}`}>{it.status}</span>
+                                                <div className="lf-text">
+                                                    <div className="lf-title">{it.title}</div>
+                                                    <div className="lf-meta">{it.location} · {it.time}</div>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div className="lf-back" ref={lfBackRef}>
+                                    {(() => {
+                                        const it = lostItems[lfIdx] || lostItems[0];
+                                        return (
+                                            <div className="detail-wrap">
+                                                <h4 className="detail-title">{it.title}</h4>
+                                                <div className="detail-grid">
+                                                    <div><span className="dt">Status</span><span className="dd">{it.status}</span></div>
+                                                    <div><span className="dt">Location</span><span className="dd">{it.location}</span></div>
+                                                    <div><span className="dt">Contact</span><span className="dd">{it.contact}</span></div>
+                                                </div>
+                                                <div className="btn-row">
+                                                    <button className="secondary">More</button>
+                                                    <button className="primary" onClick={() => setLfFlipped(false)}>Back</button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })()}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div className="card">
-                        <h3 style={{ margin: '4px 6px 10px' }}>Carpool</h3>
-                        <ul className="carpool-list">
-                            <li className="carpool-item">
-                                <span className="place start">Campus Gate</span>
-                                <span className="trip-meta"><FaCarSide className="car-ic" /><FiClock /> <span className="time">6:00 PM</span></span>
-                                <span className="place end">Solan</span>
-                            </li>
-                            <li className="carpool-item">
-                                <span className="place start">Admin Block</span>
-                                <span className="trip-meta"><FaCarSide className="car-ic" /><FiClock /> <span className="time">7:30 AM</span></span>
-                                <span className="place end">Shimla</span>
-                            </li>
-                            <li className="carpool-item">
-                                <span className="place start">Bus Stand</span>
-                                <span className="trip-meta"><FaCarSide className="car-ic" /><FiClock /> <span className="time">5:15 PM</span></span>
-                                <span className="place end">Dharampur</span>
-                            </li>
-                        </ul>
-                        <div className="mini-actions">
-                            <NavLink to="/carpool" className="muted">Explore carpool →</NavLink>
+                        <div className="card-head">
+                            <h3>Carpool</h3>
+                            <NavLink to="/carpool" className="inline-link">View all</NavLink>
+                        </div>
+                        <div className={`cp-card ${cpFlipped ? 'is-flipped' : ''}`}>
+                            <div className="cp-inner" ref={cpInnerRef}>
+                                <div className="cp-front" ref={cpFrontRef}>
+                                    <div className="trip-list">
+                                        {trips.map((t, i) => (
+                                            <div className="trip clickable" key={i} onClick={() => { setCpIdx(i); setCpFlipped(true); }}>
+                                                <div className="line" />
+                                                <div className="label start">{t.start}</div>
+                                                <div className="time-dot">{t.time}</div>
+                                                <div className="label end">{t.end}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="cp-back" ref={cpBackRef}>
+                                    {(() => {
+                                        const t = trips[cpIdx] || trips[0];
+                                        return (
+                                            <div className="detail-wrap">
+                                                <div className="muted" style={{ marginBottom: 8 }}>
+                                                    <button className="inline-link" onClick={() => setCpFlipped(false)}>← Back</button>
+                                                </div>
+                                                <h4 className="detail-title">{t.start} → {t.end}</h4>
+                                                <div className="detail-grid">
+                                                    <div><span className="dt">From</span><span className="dd">{t.start}</span></div>
+                                                    <div><span className="dt">To</span><span className="dd">{t.end}</span></div>
+                                                    <div><span className="dt">Time</span><span className="dd">{t.time}</span></div>
+                                                </div>
+                                                <div className="btn-row">
+                                                    <button className="secondary">More</button>
+                                                    <button className="primary">Contact</button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })()}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </aside>

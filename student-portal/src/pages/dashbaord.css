@@ -56,6 +56,8 @@
     border-radius: 10px;
     padding: 12px;
     transition: width .2s ease, transform .2s ease;
+    align-self: start;
+    /* prevent sidebar from stretching full height; size to content */
 }
 
 .sidebar h3 {
@@ -219,6 +221,120 @@
     border-radius: 8px;
 }
 
+/* Generic input/select/textarea for dark theme */
+.input {
+    width: 100%;
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+.input::placeholder {
+    color: var(--muted);
+}
+
+label {
+    color: var(--muted);
+    font-size: 13px;
+    display: inline-block;
+    margin-bottom: 6px;
+}
+
+/* Page body wrapper for non-Home pages adopting the same topbar */
+.page-body {
+    padding: 80px 16px 16px;
+}
+
+.wide-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    gap: 16px;
+}
+
+/* Marketplace controls */
+.market-controls {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.market-controls .filters {
+    margin: 0;
+}
+
+/* Responsive rows */
+.row {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.row .col {
+    display: grid;
+}
+
+.row .col-sm {
+    max-width: 360px;
+}
+
+@media (max-width: 700px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Marketplace grid */
+.market-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+}
+
+.market-item {
+    padding: 0;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 150px auto;
+}
+
+.market-thumb {
+    background-size: cover;
+    background-position: center;
+}
+
+.market-body {
+    padding: 12px;
+    display: grid;
+    gap: 6px;
+}
+
+.market-title {
+    margin: 0;
+    font-size: 16px;
+}
+
+.market-desc {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.market-contact {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text);
+}
+
+/* Marketplace form */
+.market-form {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+}
+
 /* Card header with Post (+) button */
 .card-head {
     display: flex;
@@ -229,6 +345,15 @@
 
 .card-head h3 {
     margin: 0;
+}
+
+.card-head .inline-link {
+    margin-left: auto;
+    color: var(--muted);
+}
+
+.card-head .inline-link:hover {
+    color: var(--primary);
 }
 
 .post-btn {
@@ -289,6 +414,7 @@
     gap: 16px;
     margin-right: 8px;
     /* breathing room from the window edge */
+    align-self: start; /* only as tall as its content */
 }
 
 /* Right column mini cards */
@@ -304,6 +430,36 @@
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+/* Lost & Found list text blocks */
+.lf-item .lf-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.lf-item .lf-title {
+    font-weight: 600;
+}
+
+.lf-item .lf-meta {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Clickable row hover/pop */
+.clickable {
+    cursor: pointer;
+    transition: transform .12s ease, background .2s ease, border-color .2s ease;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 6px 6px;
+}
+
+.clickable:hover {
+    transform: translateY(-1px);
+    background: var(--panel-2);
+    border-color: var(--border);
 }
 
 .badge {
@@ -393,11 +549,166 @@
     color: #a8d1ff;
 }
 
+/* Inline link utility */
+.inline-link {
+    color: var(--muted);
+}
+
+.inline-link:hover {
+    color: var(--primary);
+}
+
+/* Lost & Found flip card */
+.lf-card {
+    perspective: 1000px;
+}
+
+.lf-inner {
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+    transition: transform .4s ease, height .2s ease;
+}
+
+.lf-card.is-flipped .lf-inner {
+    transform: rotateY(180deg);
+}
+
+.lf-front,
+.lf-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+}
+
+.lf-back {
+    transform: rotateY(180deg);
+}
+
+.view-btn,
+.secondary {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Detail view blocks */
+.detail-wrap {
+    display: grid;
+    gap: 10px;
+}
+
+.detail-title {
+    margin: 0;
+}
+
+.detail-grid {
+    display: grid;
+    gap: 8px;
+}
+
+.detail-grid .dt {
+    color: var(--muted);
+    display: inline-block;
+    width: 84px;
+}
+
+.detail-grid .dd {
+    font-weight: 600;
+}
+
+/* Carpool quick view line with centered time */
+.trip-list {
+    display: grid;
+    gap: 12px;
+}
+
+.trip {
+    position: relative;
+    padding: 16px 0 14px;
+}
+
+.trip .line {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 50%;
+    height: 1px;
+    background: var(--border);
+}
+
+.trip .label {
+    position: absolute;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.trip .label.start {
+    left: 16px;
+    top: 2px;
+}
+
+.trip .label.end {
+    right: 16px;
+    bottom: 2px;
+}
+
+.time-dot {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    margin: 0 auto;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+/* Carpool flip card */
+.cp-card {
+    perspective: 1000px;
+}
+
+.cp-inner {
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+    transition: transform .4s ease, height .2s ease;
+}
+
+.cp-card.is-flipped .cp-inner {
+    transform: rotateY(180deg);
+}
+
+.cp-front,
+.cp-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+}
+
+.cp-back {
+    transform: rotateY(180deg);
+}
+
 /* Main column inner wrapper for readable width */
 .main-inner {
     width: 100%;
     max-width: 780px;
     margin: 0 auto;
+    display: grid;
+    gap: 20px;
 }
 
 /* Filters */
@@ -493,6 +804,187 @@
     color: #ff8a8a;
 }
 
+/* Empty state for Confessions */
+.empty {
+    display: grid;
+    place-items: center;
+    gap: 6px;
+    padding: 24px 8px;
+    color: var(--muted);
+}
+
+.empty .big {
+    font-size: 28px;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+/* Calendar (Events & Notices) */
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.cal-h {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.cal-day {
+    position: relative;
+    height: 72px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+}
+
+.cal--other {
+    opacity: 0.45;
+}
+
+.cal--today {
+    outline: 1px solid var(--primary);
+    outline-offset: -1px;
+}
+
+.cal-date {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.cal-dot {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+/* Calendar animations and hover previews */
+.cal-day {
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.cal-day:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
+}
+
+.cal-dot {
+    animation: pulse 1.8s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.25);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.cal-pop {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    transform: translateY(6px);
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+}
+
+.cal-day:hover .cal-pop {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cal-pop-row {
+    display: grid;
+    gap: 2px;
+    padding: 4px 2px;
+}
+
+.cal-pop-title {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.cal-pop-meta {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.cal-pop-more {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Events list in middle column */
+.event-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    display: grid;
+    gap: 8px;
+}
+
+.event-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-2);
+}
+
+.event-date {
+    width: 42px;
+    text-align: center;
+    border-right: 1px dashed var(--border);
+    padding-right: 8px;
+}
+
+.event-day {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.event-mon {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.event-title {
+    font-weight: 600;
+}
+
+.event-meta {
+    font-size: 12px;
+    color: var(--muted);
+}
+
 /* Responsive */
 @media (max-width: 1100px) {
     .layout {
@@ -543,6 +1035,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+
     padding: 0 16px;
     background: rgba(22, 26, 34, 0.9);
     -webkit-backdrop-filter: blur(6px);
@@ -579,6 +1072,30 @@
 
 .topbar-spacer {
     margin-left: auto;
+}
+
+/* Right-side header actions */
+.topbar-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 10px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13px;
+}
+
+.hbtn:hover {
+    background: #1e2634;
 }
 
 /* Floating nav toggle (like Reddit) - sits in the gutter between sidebar and content */
@@ -633,4 +1150,57 @@
 
 .layout.sidebar-hidden::before {
     left: var(--gutter);
+}
+
+/* Lost & Found list item alignment and spacing (moved out of nested block) */
+.lf-item {
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.lf-item .badge {
+    margin-top: 2px;
+}
+
+/* Subtle entrance animation for cards */
+@keyframes floatIn {
+    from {
+        transform: translateY(6px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.card {
+    animation: floatIn .25s ease both;
+}
+
+/* Micro-interactions */
+.pill {
+    transition: transform .08s ease, background .2s ease, border-color .2s ease;
+}
+
+.pill:hover {
+    transform: translateY(-1px);
+}
+
+.post-btn {
+    transition: transform .08s ease, background .2s ease;
+}
+
+.post-btn:active {
+    transform: scale(.98);
+}
+
+/* Market thumb hover zoom */
+.market-thumb {
+    transition: transform .25s ease;
+}
+
+.market-item:hover .market-thumb {
+    transform: scale(1.03);
 }
