@@ -1,0 +1,96 @@
+
+# College All-in-One Student Portal
+
+## Project Overview
+We are building a lightweight and student-friendly website that acts as a one-stop solution for college students. It fixes the major problems students face on campus and provides them with a centralized platform.
+
+## Features
+1. **Confessions** – Anonymous posting (default home page/dashboard)
+2. **Marketplace** – Buy/sell items, verified within 24 hours by admins
+3. **Carpooling / Ride Sharing**
+4. **Events & Notices** – Centralized place for all university updates
+5. **Lost & Found**
+6. **Roommate Finder**
+7. **Vacant Room Listings (PG/Hostel/Flat sharing)**
+
+## Tech Stack
+- **Frontend:** React (with plain CSS, no Tailwind)
+- **Backend:** Laravel (PHP Framework)
+- **Database:** MySQL
+- **Hosting:** Deployed on server (can be AWS EC2, DigitalOcean, or shared hosting)
+- **Security:** Admin-only verification system for listings, basic input sanitization to prevent spam/abuse
+
+## Pages
+1. **Home (Confessions Dashboard)**  
+   - Default landing page  
+   - Confession submission form with rich-text editor  
+   - Display of verified confessions  
+   - Sidebar navigation for other features  
+
+2. **Marketplace**  
+   - Categories for items  
+   - Item details page  
+   - Submission form for selling items (admin verified)  
+
+3. **Carpooling**  
+   - Ride listings (from, to, time, contact)  
+   - Submission form for offering/requesting rides  
+
+4. **Events & Notices**  
+   - List of official/unofficial events  
+   - Admin adds/approves notices  
+
+5. **Lost & Found**  
+   - Lost items section  
+   - Found items section  
+   - Submission form  
+
+6. **Roommate Finder**  
+   - Listings for students searching for roommates  
+   - Details like budget, location, preferences  
+
+7. **Vacant Rooms**  
+   - Hostel/PG/Flat vacancy listings  
+   - Contact details for owners/students  
+
+## Setup Instructions
+
+### 1. Clone and Setup Project
+```bash
+# Frontend Setup (React)
+npx create-react-app student-portal
+cd student-portal
+npm install
+npm start
+
+# Backend Setup (Laravel)
+composer create-project laravel/laravel backend
+cd backend
+php artisan serve
+
+# Database Setup (MySQL)
+- Install MySQL and create a database `student_portal`
+- Configure `.env` file in Laravel with DB credentials
+```
+
+### 2. Connect React with Laravel API
+- Use **Axios** in React to call Laravel APIs
+- Example: fetch confessions, marketplace items, rides, etc.
+
+### 3. Hosting
+- Host Laravel backend on a VPS (AWS EC2, DigitalOcean, etc.)
+- Host React frontend separately (Netlify, Vercel, or same server with Apache/Nginx)
+- Connect frontend to backend API via environment variables
+
+### 4. Admin Moderation System
+- Submissions go into "pending" state in database
+- Admin panel (simple Laravel CRUD interface) to approve/reject posts
+- Only verified posts appear on the public website
+
+---
+
+This setup ensures the website is:  
+- **Lightweight** (React + plain CSS)  
+- **Secure** (admin moderation + sanitization)  
+- **Accessible** (open for all students, no login required)  
+- **Mobile Friendly** (responsive design with custom breakpoints for app-like experience)

@@ -1,0 +1,332 @@
+# College Student Portal – 8‑Iteration Implementation Roadmap
+
+This roadmap breaks the project into 8 small, shippable iterations. Each iteration includes goals, database and API changes, frontend pages/components, security checks, and testing. You can stop after any iteration with a working, secure slice of functionality.
+
+Targets
+- Professional-grade security from day 1 (auth, rate limiting, input validation, sanitization, least privilege)
+- Backend: Laravel + MySQL (REST JSON), Admin‑only moderation
+- Frontend: React SPA (plain CSS), Axios, React Router
+- Hosting: Backend on VPS, Frontend on static host (or same VPS)
+
+Environments
+- Local: http://localhost:{react_port}, http://localhost:{laravel_port}
+- Staging: staging.api.yourdomain.com, staging.yourdomain.com
+- Prod: api.yourdomain.com, yourdomain.com
+
+Security Baseline (applies across all iterations)
+- Auth: Admin‑only using Laravel Sanctum; httpOnly cookies if same-site or Authorization: Bearer with CSRF protection for state‑changing calls
+- CORS: Allow only known frontend origins; deny wildcard in prod
+- Validation: Laravel Form Requests with strict rules; length caps on all text; whitelist allowed fields
+- XSS: Sanitize rich text on server (mews/purifier) and use DOMPurify client-side for display if needed
+- Rate limiting: Throttle public POST endpoints (e.g., 5/min/IP) and sensitive GETs
+- Abuse controls: Optional hCaptcha/ReCAPTCHA v3 on public submission forms
+- File uploads: MIME/type checking, max size, image dimension validation, strip EXIF; store outside webroot; signed URLs if using S3
+- Logging/monitoring: Access & error logs; 4xx/5xx alerts; app logs with contextual metadata; rotate logs
+- Secrets: .env per environment; never commit secrets; production .env restricted permissions
+- Least privilege DB user: Separate DB users for prod with only needed privileges
+- Backups: Daily DB dumps retained 7–30 days; verified restore process
+- Packages: Keep dependencies updated; use Larastan/PHPStan & ESLint; enable Dependabot or similar
+
+How to read each iteration
+- Goals: What’s shipped
+- Backend: migrations, models, controllers, routes
+- Frontend: pages, components, navigation
+- Security: specific controls added or verified
+- Testing: unit/feature/API + e2e checklist
+- DoD: definition of done
+- Quick commands: Windows PowerShell commands to run locally
+
+
+## Iteration 1 — Project Scaffolding & Security Baseline
+Goals
+- Repo initialized, CI basics, lint/format, environment configs
+- Laravel API skeleton with Sanctum, CORS, rate limiting
+- React app skeleton with routing, layout, and API client
+- Admin auth (login/logout) wired end‑to‑end
+
+Backend
+- Create Laravel app; configure .env (DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD)
+- Install Sanctum and publish config/migrations; enable SPA cookie or token auth
+- Set up CORS (config/cors.php) to allow only local frontends
+- Add global API rate limits (throttle:api) and per‑route limits for POST endpoints
+- Create Admin model/migration & seeder for first admin
+- Routes: /api/admin/login, /api/admin/logout, /api/health
+
+Frontend
+- Create React app; add React Router, Axios
+- App shell: Nav/Sidebar linking to planned pages (disabled except Confessions)
+- Axios instance with baseURL from env (REACT_APP_API_BASE_URL)
+- Admin Login page → stores token/cookie; ProtectedRoute wrapper
+
+Security
+- Enforce HTTPS in non-local environments; secure cookies; SameSite=Lax or Strict
+- CSRF protection for cookie-based auth; if token-based, ensure Authorization header on admin calls
+
+Testing
+- Backend: feature tests for /health and admin login (happy/invalid)
+- Frontend: simple render tests; admin login flow smoke test
+
+Definition of Done (DoD)
+- Admin can log in and see a protected placeholder page
+- Health endpoint returns 200 with app/version
+- CI runs lint + unit tests
+
+Quick commands (PowerShell)
+```powershell
+# Backend
+composer create-project laravel/laravel backend
+cd backend
+composer require laravel/sanctum
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+php artisan migrate
+php artisan make:seeder AdminSeeder; php artisan db:seed --class=AdminSeeder
+php artisan serve
+
+# Frontend (in a new terminal)
+cd ..
+npx create-react-app student-portal --use-npm
+cd student-portal
+npm install axios react-router-dom
+npm start
+```
+
+
+## Iteration 2 — Confessions MVP (Default Home)
+Goals
+- Public can submit anonymous confessions → pending
+- Admin approves/rejects
+- Public sees approved confessions (pagination/infinite scroll)
+
+Backend
+- Migration: confessions(id, content TEXT, alias VARCHAR(32) nullable, status ENUM[pending,approved,rejected], created_at)
+- Model: Confession
+- Controllers: ConfessionController (store, index)
+- AdminController: approve/reject confession
+- Routes:
+  - POST /api/confessions (public → pending)
+  - GET /api/confessions?cursor=… (approved only)
+  - PATCH /api/admin/confessions/{id}/approve
+  - PATCH /api/admin/confessions/{id}/reject
+- Validation: content required, max length (e.g., 2,000 chars), alias max 32
+- Sanitization: Purify content; store sanitized HTML or plain text then sanitize on render
+- Rate limit: POST /confessions (e.g., 5/min/IP)
+
+Frontend
+- Pages: Home (ConfessionsList), ConfessionSubmit
+- Components: InfiniteList, ConfessionCard, Form with char counter
+- Admin: Pending queue (ConfessionsPending) with Approve/Reject buttons
+
+Security
+- DOMPurify if rendering HTML; otherwise render as plain text with safe line breaks
+- Visual CAPTCHA if abuse detected
+
+Testing
+- Backend feature tests: cannot see pending; approve shows in GET; validation errors; rate‑limit behavior
+- Frontend e2e: submit → success banner; admin approve → appears on Home
+
+DoD
+- Confession submission works; admin moderation works; public listing paginates
+
+
+## Iteration 3 — Marketplace (with Images)
+Goals
+- Students post items (title, price, description, images, contact) → pending
+- Public list + detail for approved items; category filters
+
+Backend
+- Migration: marketplace_items(id, title, description TEXT, price DECIMAL(10,2), category VARCHAR(64), contact VARCHAR(128), images JSON, status, created_at)
+- Validation: title required (max 120), price >= 0, description max 5000, images <= 5, size/type checks
+- File uploads: use Laravel Storage; php artisan storage:link; optionally S3
+- Routes:
+  - POST /api/marketplace (multipart)
+  - GET /api/marketplace?category=&q=&cursor=
+  - GET /api/marketplace/{id}
+  - Admin approve/reject like confessions
+- Optional search by title/description (simple LIKE)
+
+Frontend
+- Pages: MarketplaceList, MarketplaceDetail, MarketplaceSubmit
+- Components: ImageUploader (preview, client-side size cap), FilterBar
+- Admin: Pending queue tabs
+
+Security
+- Strict MIME check, max image size (e.g., 2–3 MB), remove EXIF
+- Strip HTML in description or sanitize; no links allowed if desired
+
+Testing
+- Backend feature tests: upload images, invalid files rejected, approve → visible
+- Frontend e2e: create listing with images; pagination and filters work
+
+DoD
+- Marketplace end‑to‑end works with image uploads and moderation
+
+
+## Iteration 4 — Carpooling / Ride Sharing
+Goals
+- Offer/request rides with from, to, date/time, seats, contact → pending
+- Public listing and filters
+
+Backend
+- Migration: rides(id, type ENUM[offer,request], origin VARCHAR(128), destination VARCHAR(128), ride_time DATETIME, seats TINYINT nullable, contact VARCHAR(128), notes TEXT nullable, status, created_at)
+- Routes: POST /api/rides; GET /api/rides?type=&date=&origin=&destination=; Admin approve/reject
+- Validation: future times, seats within [1..8]
+
+Frontend
+- Pages: RidesList (filters), RideSubmit
+- Components: DateTimePicker (or simple inputs), Pill filters
+
+Security
+- Obfuscate contact optionally (reveal button)
+- Rate limit submissions; validate future dates
+
+Testing
+- Backend tests for filtering and validation; time boundaries
+- Frontend e2e: submit ride; filter by date/origin/destination
+
+DoD
+- Rides functional with moderation and useful filters
+
+
+## Iteration 5 — Events & Notices
+Goals
+- Centralized events/notices; Admin can add/approve; optional community submissions
+
+Backend
+- Migration: events(id, title, body TEXT, starts_at DATETIME, ends_at DATETIME, official BOOL, status, created_at)
+- Routes: Admin POST/PATCH/DELETE; Public GET /api/events?from=&to=&official=
+- Validation: end >= start; body sanitized
+
+Frontend
+- Pages: EventsList; AdminEventEditor (create/edit)
+- Components: Calendar/agenda list, Date range filter
+
+Security
+- Admin-only creation by default; optional public submissions gated by CAPTCHA and strict moderation
+
+Testing
+- Backend: date validation, official filter, visibility only when approved
+- Frontend: list by date range; admin create/edit lifecycle
+
+DoD
+- Events visible publicly; admin can manage lifecycle
+
+
+## Iteration 6 — Lost & Found
+Goals
+- Lost and Found sections with images and contact → pending
+
+Backend
+- Migrations:
+  - lost_items(id, title, description, lost_at DATE, location VARCHAR(128), contact VARCHAR(128), images JSON, status)
+  - found_items(id, title, description, found_at DATE, location, contact, images JSON, status)
+- Routes: POST/GET for both; Admin approve/reject
+
+Frontend
+- Pages: LostList, FoundList, LostFoundSubmit (toggle type)
+- Components: Shared ListingCard, ImageUploader reuse
+
+Security
+- Same upload rules; cap text length; sanitize
+
+Testing
+- Backend: date validation; listing separation; image rules
+- Frontend: create lost item and view; create found item and view
+
+DoD
+- Lost & Found fully functional
+
+
+## Iteration 7 — Roommate Finder & Vacant Rooms
+Goals
+- Roommate preferences and vacancies (PG/Hostel/Flat) → pending
+
+Backend
+- Migrations:
+  - roommate_listings(id, budget DECIMAL(10,2), location VARCHAR(128), preferences TEXT, contact VARCHAR(128), status)
+  - vacancies(id, type ENUM[hostel,pg,flat], address VARCHAR(255), rent DECIMAL(10,2), contact VARCHAR(128), details TEXT, images JSON nullable, status)
+- Routes: POST/GET for both; filters on budget/location/type; Admin approve/reject
+
+Frontend
+- Pages: RoommatesList, RoommateSubmit; VacanciesList, VacancySubmit, VacancyDetail
+- Components: Filters by budget/location/type; shared cards
+
+Security
+- Normalize contact; allow contact via masked email/phone optionally
+
+Testing
+- Backend: filter correctness; validation; moderation
+- Frontend: submit + list + filter flows
+
+DoD
+- Roommates and Vacancies live with moderation and filters
+
+
+## Iteration 8 — Production Hardening & Deployment
+Goals
+- Make it production‑ready: performance, monitoring, backups, CDNs, SEO, accessibility
+
+Backend/Infra
+- Deploy Laravel behind Nginx/Apache + PHP‑FPM on VPS
+- Configure cache (Redis) for query caching if needed; enable Horizon if using queues
+- Centralized logging; alerts on 5xx spikes; health checks
+- Automated daily DB backups to secure storage; test restore
+- Add audit logs for admin actions (who approved what)
+- Add content retention policies (auto‑expire old posts via scheduler)
+
+Frontend
+- Build and deploy static assets (Netlify/Vercel or VPS)
+- Image optimization and lazy loading; compress; add SEO meta for public pages
+- Accessibility audit (keyboard nav, aria labels, color contrast)
+
+Security
+- HTTPS everywhere (Let’s Encrypt); HSTS; security headers (CSP, X‑Frame‑Options, X‑Content‑Type‑Options)
+- Final CORS lockdown; WAF/CDN (Cloudflare) optional
+- Vulnerability scan (npm audit, composer audit), dependency updates
+
+Testing
+- Load test key endpoints (k6/Artillery)
+- E2E smoke suite running in CI against staging
+- Disaster recovery drill (restore from backup)
+
+DoD
+- Green smoke tests on prod; monitoring/alerts in place; rollback plan documented
+
+
+Database Setup Summary (initial local)
+- Install MySQL 8; create DB student_portal; user with least privilege
+- Laravel .env
+  - DB_CONNECTION=mysql
+  - DB_HOST=127.0.0.1
+  - DB_PORT=3306
+  - DB_DATABASE=student_portal
+  - DB_USERNAME=student_portal_user
+  - DB_PASSWORD=strong_password
+
+
+CI/CD & Quality Gates
+- CI: lint (ESLint), type checks if using TS later, PHPUnit/Laravel feature tests, basic frontend tests
+- Pre‑commit: linters & prettier
+- Quality gates: Build PASS, Lint PASS, Unit/Feature tests PASS, E2E Smoke PASS on staging before prod deploy
+
+
+Immediate Next Steps (Week 1)
+1) Complete Iteration 1; commit repo structure
+2) Create AdminSeeder with a known initial admin and rotate password post‑deploy
+3) Wire healthcheck and admin login; confirm CORS and rate limits
+4) Start Iteration 2 schema + endpoints for Confessions
+
+
+Appendix — Minimal API Contract Examples
+- GET /api/confessions → 200 { data: [{ id, content, alias, created_at }], nextCursor }
+- POST /api/confessions → 201 { id, status: "pending" }
+- PATCH /api/admin/confessions/{id}/approve → 200 { id, status: "approved" }
+- GET /api/marketplace?category=&q=&cursor= → 200 { data: [...], nextCursor }
+
+Error envelope (suggested)
+- { error: { code: string, message: string, details?: any } }
+
+
+Notes
+- Keep each iteration deployable and valuable to users
+- Prefer separate explicit tables for clarity now; refactor to polymorphic if needed later
+- Document all env vars and secrets per environment
