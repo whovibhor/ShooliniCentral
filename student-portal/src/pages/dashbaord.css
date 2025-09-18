@@ -414,7 +414,8 @@ label {
     gap: 16px;
     margin-right: 8px;
     /* breathing room from the window edge */
-    align-self: start; /* only as tall as its content */
+    align-self: start;
+    /* only as tall as its content */
 }
 
 /* Right column mini cards */
