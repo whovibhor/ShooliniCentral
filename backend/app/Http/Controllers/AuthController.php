@@ -23,7 +23,14 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        // Issue Sanctum token for API usage
+        if ($request->user()->role !== 'admin') {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => ['Insufficient permissions.'],
+            ]);
+        }
+
+        // Issue Sanctum token for API usage (admin)
         $token = $request->user()->createToken('admin')->plainTextToken;
 
         return response()->json([
