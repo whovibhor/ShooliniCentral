@@ -13,18 +13,18 @@ export default function Home() {
     const [showChooser, setShowChooser] = useState(false);
     const [postingMode, setPostingMode] = useState(null); // null until user chooses Confessions
     // Right panel quick data and UI state
-    const lostItems = [
+    const lostItems = React.useMemo(() => ([
         { title: 'Blue water bottle', status: 'Found', location: 'Library foyer', time: '2h ago', contact: '98765 43210' },
         { title: 'Black wallet', status: 'Lost', location: 'Cafeteria', time: 'Today 3:10 PM', contact: '—' },
         { title: 'USB drive', status: 'Found', location: 'Lab 3', time: 'Yesterday', contact: '—' },
         { title: 'Maths notebook', status: 'Found', location: 'Seminar Hall', time: '30m ago', contact: '—' },
-    ];
-    const trips = [
+    ]), []);
+    const trips = React.useMemo(() => ([
         { start: 'Campus Gate', end: 'Solan', time: '6:00 PM' },
         { start: 'Admin Block', end: 'Shimla', time: '7:30 AM' },
         { start: 'Bus Stand', end: 'Dharampur', time: '5:15 PM' },
         { start: 'Library', end: 'Kandaghat', time: '8:00 PM' },
-    ];
+    ]), []);
     const [lfFlipped, setLfFlipped] = useState(false);
     const [lfIdx, setLfIdx] = useState(0);
     const [cpFlipped, setCpFlipped] = useState(false);
