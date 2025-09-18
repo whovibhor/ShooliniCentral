@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FiHome, FiShoppingCart, FiUsers, FiCalendar, FiSearch, FiUserCheck, FiPlus, FiLock } from 'react-icons/fi';
 import './dashbaord.css';
@@ -38,7 +38,7 @@ export default function Home() {
     const cpFrontRef = useRef(null);
     const cpBackRef = useRef(null);
 
-    const updateLfHeight = () => {
+    const updateLfHeight = useCallback(() => {
         const inner = lfInnerRef.current;
         if (!inner) return;
         const activeFace = (lfFlipped ? lfBackRef.current : lfFrontRef.current);
@@ -46,8 +46,8 @@ export default function Home() {
             const h = activeFace.scrollHeight;
             inner.style.height = h + 'px';
         }
-    };
-    const updateCpHeight = () => {
+    }, [lfFlipped]);
+    const updateCpHeight = useCallback(() => {
         const inner = cpInnerRef.current;
         if (!inner) return;
         const activeFace = (cpFlipped ? cpBackRef.current : cpFrontRef.current);
@@ -55,7 +55,7 @@ export default function Home() {
             const h = activeFace.scrollHeight;
             inner.style.height = h + 'px';
         }
-    };
+    }, [cpFlipped]);
 
     useEffect(() => {
         // initialize heights after first paint
@@ -75,8 +75,8 @@ export default function Home() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => { updateLfHeight(); }, [lfFlipped, lfIdx, lostItems]);
-    useEffect(() => { updateCpHeight(); }, [cpFlipped, cpIdx, trips]);
+    useEffect(() => { updateLfHeight(); }, [updateLfHeight, lfIdx, lostItems]);
+    useEffect(() => { updateCpHeight(); }, [updateCpHeight, cpIdx, trips]);
 
     const exec = (cmd, value = null) => {
         // text-only: allow formatting but no images
