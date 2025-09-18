@@ -1,0 +1,34 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Laravel: Serve (backend)",
+			"type": "shell",
+			"command": "cd \"d:\\Learn\\Project\\ShooliniCentral\\backend\"; php artisan serve --host=127.0.0.1 --port=8000",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Laravel: Migrate",
+			"type": "shell",
+			"command": "cd \"d:\\Learn\\Project\\ShooliniCentral\\backend\"; php artisan migrate",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Laravel: Seed Admin",
+			"type": "shell",
+			"command": "cd \"d:\\Learn\\Project\\ShooliniCentral\\backend\"; php artisan db:seed --class=AdminSeeder",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Laravel: Fresh + Seed",
+			"type": "shell",
+			"command": "cd \"d:\\Learn\\Project\\ShooliniCentral\\backend\"; php artisan migrate:fresh --seed",
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

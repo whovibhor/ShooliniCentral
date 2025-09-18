@@ -24,8 +24,8 @@ Route::get('/health', function () {
     ]);
 });
 
-// Auth
-Route::post('/admin/login', [AuthController::class, 'login']);
+// Auth (rate limited)
+Route::post('/admin/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/logout', [AuthController::class, 'logout']);
     Route::get('/me', function (Request $request) {
