@@ -1,0 +1,93 @@
+@import 'tailwindcss';
+
+/* Layout shell helpers */
+:root {
+    --sc-sidebar-expanded: 240px;
+    --sc-sidebar-collapsed: 72px;
+}
+
+#sc-sidebar {
+    width: var(--sc-sidebar-expanded);
+}
+
+html[data-sidebar="collapsed"] #sc-sidebar {
+    width: var(--sc-sidebar-collapsed);
+}
+
+html[data-sidebar="collapsed"] #sc-sidebar .label {
+    display: none;
+}
+
+/* Brand accent utilities (red/green subtle touches) */
+.sc-accent-active {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.sc-accent-border {
+    border-color: #dc2626;
+}
+
+.sc-accent-green {
+    color: #059669;
+}
+
+/* Sidebar icon swap: bw default, col on hover/active */
+.navicon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    /* ensure absolute children are positioned within */
+}
+
+.navicon img.icon-bw {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 200ms ease-out, visibility 0s linear 0s;
+}
+
+.navicon img.icon-col {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms ease-out, visibility 0s linear 200ms;
+}
+
+/* Hover state */
+a.group:hover .navicon img.icon-bw {
+    opacity: 0;
+}
+
+a.group:hover .navicon img.icon-col {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+/* Active state on current page */
+a[aria-current="page"] .navicon img.icon-bw {
+    opacity: 0;
+}
+
+a[aria-current="page"] .navicon img.icon-col {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+/* Slight scale on hover/active for icon images (absolute-centered) */
+.navicon img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 160ms ease-out;
+}
+
+.group:hover .navicon img {
+    transform: translate(-50%, -50%) scale(1.12);
+}
+
+a[aria-current="page"] .navicon img {
+    transform: translate(-50%, -50%) scale(1.12);
+}

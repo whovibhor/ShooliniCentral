@@ -14,73 +14,74 @@ We are building a lightweight and student-friendly website that acts as a one-st
 7. **Vacant Room Listings (PG/Hostel/Flat sharing)**
 
 ## Tech Stack
-- **Frontend:** React (with plain CSS, no Tailwind)
+- **Frontend:** (Deferred) – React removed for now; backend-first rebuild
 - **Backend:** Laravel (PHP Framework)
 - **Database:** MySQL
 - **Hosting:** Deployed on server (can be AWS EC2, DigitalOcean, or shared hosting)
 - **Security:** Admin-only verification system for listings, basic input sanitization to prevent spam/abuse
 
 ## Pages
-1. **Home (Confessions Dashboard)**  
-   - Default landing page  
-   - Confession submission form with rich-text editor  
-   - Display of verified confessions  
-   - Sidebar navigation for other features  
+1. **Home (Confessions Dashboard)**
+   - Default landing page
+   - Confession submission form with rich-text editor
+   - Display of verified confessions
+   - Sidebar navigation for other features
 
-2. **Marketplace**  
-   - Categories for items  
-   - Item details page  
-   - Submission form for selling items (admin verified)  
+2. **Marketplace**
+   - Categories for items
+   - Item details page
+   - Submission form for selling items (admin verified)
 
-3. **Carpooling**  
-   - Ride listings (from, to, time, contact)  
-   - Submission form for offering/requesting rides  
+3. **Carpooling**
+   - Ride listings (from, to, time, contact)
+   - Submission form for offering/requesting rides
 
-4. **Events & Notices**  
-   - List of official/unofficial events  
-   - Admin adds/approves notices  
+4. **Events & Notices**
+   - List of official/unofficial events
+   - Admin adds/approves notices
 
-5. **Lost & Found**  
-   - Lost items section  
-   - Found items section  
-   - Submission form  
+5. **Lost & Found**
+   - Lost items section
+   - Found items section
+   - Submission form
 
-6. **Roommate Finder**  
-   - Listings for students searching for roommates  
-   - Details like budget, location, preferences  
+6. **Roommate Finder**
+   - Listings for students searching for roommates
+   - Details like budget, location, preferences
 
-7. **Vacant Rooms**  
-   - Hostel/PG/Flat vacancy listings  
-   - Contact details for owners/students  
+7. **Vacant Rooms**
+   - Hostel/PG/Flat vacancy listings
+   - Contact details for owners/students
 
 ## Setup Instructions
 
-### 1. Clone and Setup Project
-```bash
-# Frontend Setup (React)
-npx create-react-app student-portal
-cd student-portal
-npm install
-npm start
+### 1. Clone and Setup Project (Laravel at repo root)
+```powershell
+# Clone
+git clone <repo-url>
+cd ShooliniCentral
 
-# Backend Setup (Laravel)
-composer create-project laravel/laravel backend
-cd backend
-php artisan serve
+# Configure environment
+copy .env.example .env
+# Update .env for DB (MySQL recommended) – DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD
 
-# Database Setup (MySQL)
-- Install MySQL and create a database `student_portal`
-- Configure `.env` file in Laravel with DB credentials
+# Install PHP dependencies
+composer install
+
+# Generate app key and run migrations (SQLite file already scaffolded; switch to MySQL when ready)
+php artisan key:generate
+php artisan migrate
+
+# Serve locally
+php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-### 2. Connect React with Laravel API
-- Use **Axios** in React to call Laravel APIs
-- Example: fetch confessions, marketplace items, rides, etc.
+### 2. Frontend (Deferred)
+- We’ve pivoted to backend-first. When ready, a minimal Blade frontend or a separate SPA can be reintroduced.
 
 ### 3. Hosting
 - Host Laravel backend on a VPS (AWS EC2, DigitalOcean, etc.)
-- Host React frontend separately (Netlify, Vercel, or same server with Apache/Nginx)
-- Connect frontend to backend API via environment variables
+- Optionally add a static frontend later; for now API + Blade pages are sufficient
 
 ### 4. Admin Moderation System
 - Submissions go into "pending" state in database
@@ -89,8 +90,8 @@ php artisan serve
 
 ---
 
-This setup ensures the website is:  
-- **Lightweight** (React + plain CSS)  
-- **Secure** (admin moderation + sanitization)  
-- **Accessible** (open for all students, no login required)  
-- **Mobile Friendly** (responsive design with custom breakpoints for app-like experience)
+This setup ensures the website is:
+- **Focused** (Laravel + SQL only)
+- **Secure** (admin moderation + sanitization)
+- **Accessible** (open for all students, no login required)
+- **Ready to extend** (add Blade UI or SPA later when needed)

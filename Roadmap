@@ -1,5 +1,7 @@
 # College Student Portal – 8‑Iteration Implementation Roadmap
 
+Note (2025‑09‑22): We pivoted to a Laravel + SQL only stack. Any sections in this roadmap that refer to a React frontend are currently not in scope. Treat those steps as deprecated until we reintroduce a frontend.
+
 This roadmap breaks the project into 8 small, shippable iterations. Each iteration includes goals, database and API changes, frontend pages/components, security checks, and testing. You can stop after any iteration with a working, secure slice of functionality.
 
 Targets
