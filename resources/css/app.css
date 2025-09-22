@@ -91,3 +91,22 @@ a[aria-current="page"] .navicon img.icon-col {
 a[aria-current="page"] .navicon img {
     transform: translate(-50%, -50%) scale(1.12);
 }
+
+/* Typography: Saira font application */
+/* Utility class */
+.font-saira {
+    font-family: "Saira", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Apply Saira to sidebar, page titles, buttons, header, and footer */
+#sc-sidebar,
+header,
+footer,
+h1,
+h2,
+h3,
+button,
+[role="button"],
+.btn {
+    font-family: "Saira", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+}

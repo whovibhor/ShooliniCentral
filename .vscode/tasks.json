@@ -39,6 +39,13 @@
 				"$eslint-stylish"
 			],
 			"group": "build"
+		},
+		{
+			"label": "Build assets (vite)",
+			"type": "shell",
+			"command": "vite build",
+			"isBackground": false,
+			"group": "build"
 		}
 	]
 }
