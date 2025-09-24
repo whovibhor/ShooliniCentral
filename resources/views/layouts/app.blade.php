@@ -11,6 +11,16 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
   </head>
   <body class="min-h-screen bg-slate-50 text-slate-800">
+    <script>
+      // Early sidebar state application to avoid layout shift (FOUC)
+      (function(){
+        try {
+          var key='sc:sidebar:collapsed';
+          var collapsed = localStorage.getItem(key)==='1';
+          document.documentElement.dataset.sidebar = collapsed ? 'collapsed' : 'expanded';
+        } catch(e) {}
+      })();
+    </script>
     <div id="app" class="min-h-screen flex flex-col">
       <!-- Header -->
       <header class="sticky top-0 z-[1000] h-16 flex items-center justify-between px-4 bg-white/80 backdrop-blur border-b border-slate-200">
@@ -48,9 +58,9 @@
       </header>
 
       <div class="flex flex-1 min-h-0">
-        <!-- Sidebar -->
-        <aside id="sc-sidebar" class="relative border-r border-slate-200 bg-white transition-[width] duration-200 ease-in-out overflow-hidden">
-          <nav class="h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto py-3">
+        <!-- Sidebar (fixed) -->
+        <aside id="sc-sidebar" class="fixed top-16 bottom-0 left-0 border-r border-slate-200 bg-white transition-[width] duration-200 ease-in-out overflow-y-auto pt-2 pb-4">
+          <nav class="pb-6">
             <ul class="space-y-2">
               <!-- group heading -->
               <li class="px-3 py-2 text-xs uppercase tracking-wide text-slate-500">Main</li>
@@ -102,14 +112,13 @@
           </nav>
         </aside>
 
-        <!-- Main content -->
-        <main id="sc-main" class="flex-1 min-w-0 p-4 md:p-6">
-          @yield('content')
-        </main>
-      </div>
-
-      <!-- Footer -->
-      <footer class="border-t border-slate-200 bg-white/80 backdrop-blur px-4">
+        <!-- Main scrollable content wrapper -->
+  <div class="flex-1 transition-[margin] duration-200 ease-in-out min-h-0 flex flex-col" id="sc-scrollwrap">
+          <main id="sc-main" class="flex-1 min-w-0 p-4 md:p-6">
+            @yield('content')
+          </main>
+          <!-- Footer -->
+          <footer class="border-t border-slate-200 bg-white/80 backdrop-blur px-4">
         <div class="max-w-7xl mx-auto py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-sm">
           <div class="text-slate-600">
             <div class="font-medium text-slate-800">ShooliniCentral</div>
@@ -128,7 +137,9 @@
           <div>© {{ date('Y') }} ShooliniCentral • Made by <span class="font-semibold">THE ARCHITECT</span></div>
           <div class="text-slate-400">v{{ config('app.version', '1.0') }}</div>
         </div>
-      </footer>
+          </footer>
+        </div>
+      </div>
     </div>
   </body>
   @include('partials.sidebar-script')

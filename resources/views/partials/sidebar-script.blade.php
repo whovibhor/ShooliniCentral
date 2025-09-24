@@ -26,8 +26,46 @@
     // init
     apply(current());
 
+    // FLIP animation for confession cards when column count changes (sidebar toggle)
+    let flipLock = false;
+    function animateReflow() {
+      if (flipLock) return; // prevent overlapping toggles
+      flipLock = true;
+      const feed = document.getElementById('confession-feed');
+      if (!feed) return;
+      const cards = Array.from(feed.querySelectorAll('.confession-card'));
+      // First: record initial positions
+      const firstRects = cards.map(el => el.getBoundingClientRect());
+      // Force style change (toggle will update data attr & column-count via CSS)
+      requestAnimationFrame(() => {
+        const lastRects = cards.map(el => el.getBoundingClientRect());
+        cards.forEach((el,i) => {
+          const first = firstRects[i];
+          const last = lastRects[i];
+          const dx = first.left - last.left;
+          const dy = first.top - last.top;
+          if (dx || dy) {
+            const existingScale = getComputedStyle(el).transform.includes('matrix') ? '' : '';
+            el.style.willChange = 'transform';
+            el.style.transform = `translate(${dx}px, ${dy}px)`;
+            el.style.transition = 'none';
+            // next frame: play to natural position
+            requestAnimationFrame(() => {
+              el.style.transform = '';
+              el.style.transition = 'transform 360ms cubic-bezier(.16,.84,.44,1), box-shadow 160ms';
+            });
+          }
+        });
+        // release lock after animation window
+        setTimeout(() => { flipLock = false; cards.forEach(c=>c.style.willChange=''); }, 420);
+      });
+    }
+
     toggleBtn?.addEventListener('click', () => {
-      set(current() === 'collapsed' ? 'expanded' : 'collapsed');
+      const nextState = current() === 'collapsed' ? 'expanded' : 'collapsed';
+      // capture before layout
+      animateReflow();
+      set(nextState);
     });
 
     window.addEventListener('keydown', (e) => {

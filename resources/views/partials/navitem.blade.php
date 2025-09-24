@@ -24,6 +24,6 @@
       </svg>
     @endif
   </span>
-  <span class="label text-sm text-slate-800 whitespace-nowrap">{{ $label ?? 'Item' }}</span>
+  <span class="label nav-label text-sm text-slate-800 whitespace-nowrap">{{ $label ?? 'Item' }}</span>
   {{-- Removed left red border indicator for active item as requested --}}
 </a>

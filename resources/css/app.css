@@ -6,16 +6,49 @@
     --sc-sidebar-collapsed: 72px;
 }
 
-#sc-sidebar {
+/* Sidebar width + main offset sync */
+html[data-sidebar='expanded'] #sc-sidebar {
     width: var(--sc-sidebar-expanded);
 }
 
-html[data-sidebar="collapsed"] #sc-sidebar {
+html[data-sidebar='collapsed'] #sc-sidebar {
     width: var(--sc-sidebar-collapsed);
 }
 
-html[data-sidebar="collapsed"] #sc-sidebar .label {
+/* Transition for width already on element; manage content shift */
+html[data-sidebar='expanded'] #sc-scrollwrap {
+    margin-left: var(--sc-sidebar-expanded);
+}
+
+html[data-sidebar='collapsed'] #sc-scrollwrap {
+    margin-left: var(--sc-sidebar-collapsed);
+}
+
+/* Hide nav labels when collapsed */
+html[data-sidebar='collapsed'] #sc-sidebar .label {
     display: none;
+}
+
+/* Ensure icons centered without large gap when labels hidden */
+html[data-sidebar='collapsed'] #sc-sidebar a.group {
+    justify-content: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Prevent stray horizontal scrollbar inside collapsed sidebar */
+#sc-sidebar {
+    overflow-x: hidden;
+}
+
+
+/* Sidebar list spacing refinements */
+#sc-sidebar ul {
+    padding-bottom: 2rem;
+}
+
+#sc-sidebar li>a.group {
+    margin-top: 0;
 }
 
 /* Brand accent utilities (red/green subtle touches) */
@@ -90,6 +123,107 @@ a[aria-current="page"] .navicon img.icon-col {
 
 a[aria-current="page"] .navicon img {
     transform: translate(-50%, -50%) scale(1.12);
+}
+
+/* Confession masonry (column-count) for asymmetric heights */
+.confession-grid {
+    column-gap: 1.5rem;
+}
+
+@media (min-width:640px) {
+    .confession-grid {
+        column-count: 2;
+    }
+}
+
+@media (min-width:880px) {
+    .confession-grid {
+        column-count: 3;
+    }
+}
+
+@media (min-width:880px) {
+    html[data-sidebar='collapsed'] .confession-grid {
+        column-count: 4;
+    }
+}
+
+/* Each card blocks column breaks */
+.confession-grid .confession-card {
+    display: inline-block;
+    width: 100%;
+    break-inside: avoid;
+    margin: 0 0 1.5rem;
+}
+
+/* Remove all previous animation / reveal / variant artifacts */
+.confession-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: transform;
+}
+
+/* Hover pop + subtle elevate */
+.confession-card {
+    transition: transform 180ms ease, box-shadow 220ms ease, border-color 200ms ease;
+    transform-origin: center center;
+    contain: layout paint;
+}
+
+.confession-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 26px -8px rgba(0, 0, 0, .16), 0 4px 8px -3px rgba(0, 0, 0, .10);
+    z-index: 10;
+    position: relative;
+}
+
+/* Like button interactive state */
+.confession-like[data-liked="true"] svg {
+    stroke: #dc2626;
+    fill: #dc2626;
+}
+
+.confession-like[data-liked="true"] .confession-like-count {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.confession-like:hover svg {
+    stroke: #dc2626;
+}
+
+/* Brewing note */
+.confession-brew-note {
+    animation: brew-pulse 3s ease-in-out infinite;
+}
+
+@keyframes brew-pulse {
+
+    0%,
+    100% {
+        opacity: .65;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+}
+
+.confession-card[class*="var-"] {
+    transform: none;
+}
+
+.confession-card.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Loading indicator styling (extendable) */
+#confession-loading.loading {
+    display: block;
 }
 
 /* Typography: Saira font application */
