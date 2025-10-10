@@ -67,6 +67,12 @@
 			"command": "vite build",
 			"isBackground": false,
 			"group": "build"
+		},
+		{
+			"label": "Build assets (vite)",
+			"type": "shell",
+			"command": "npm run build",
+			"group": "build"
 		}
 	]
 }

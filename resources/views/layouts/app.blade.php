@@ -1,160 +1,192 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ config('app.name', 'Nest-Shoolini University') }}</title>
-    <!-- Fonts: Inter + Saira -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>@yield('title', 'NEST Shoolini - Your Campus Connection Hub')</title>
+    <meta name="description" content="@yield('description', 'Connect with your campus community through confessions, marketplace, events, and more at Shoolini University.')" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css','resources/js/app.js'])
-  </head>
-  <body class="min-h-screen bg-slate-50 text-slate-800">
-    <script>
-      // Early sidebar state application to avoid layout shift (FOUC)
-      (function(){
-        try {
-          var key='sc:sidebar:collapsed';
-          var collapsed = localStorage.getItem(key)==='1';
-          document.documentElement.dataset.sidebar = collapsed ? 'collapsed' : 'expanded';
-        } catch(e) {}
-      })();
-    </script>
-    <div id="app" class="min-h-screen flex flex-col">
-      <!-- Header -->
-      <header class="sticky top-0 z-[1000] h-16 flex items-center justify-between px-4 bg-white/80 backdrop-blur border-b border-slate-200">
-        <div class="flex items-center gap-3">
-          <button id="sc-sidebar-toggle" class="inline-flex items-center justify-center w-10 h-10 rounded-md border border-slate-200 hover:bg-slate-100 transition" aria-label="Toggle sidebar" title="Toggle sidebar (Ctrl+B)">
-            <!-- menu icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
-          <a href="{{ url('/') }}" class="flex items-center gap-2 font-semibold text-slate-900" aria-label="{{ config('app.name') }}">
-            <img src="{{ asset('images/bgmainlogo.png') }}" alt="{{ config('app.name') }} logo" class="w-30 h-12 object-contain" onerror="this.style.display='none'" />
-          </a>
-        </div>
-        <div class="hidden md:flex items-center gap-3 min-w-[16rem] flex-1 justify-center">
-          <form action="{{ route('search') }}" method="get" role="search" class="relative w-full max-w-xl">
-            <label for="site-search" class="sr-only">Search</label>
-            <input id="site-search" name="q" type="search" placeholder="Search In Nest" value="{{ request('q') }}" class="h-10 w-full rounded-md border border-slate-200 pl-9 pr-3 outline-none focus:ring-2 focus:ring-sky-500" />
-            <span class="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            </span>
-          </form>
-        </div>
-        <div class="flex items-center gap-4">
-          <nav class="hidden md:flex items-center gap-4 text-sm text-slate-700">
-            <a href="{{ route('about') }}" class="hover:text-slate-900">About</a>
-            <a href="{{ route('contact') }}" class="hover:text-slate-900">Contact</a>
-            <a href="{{ route('developer') }}" class="hover:text-slate-900">Developer</a>
-          </nav>
-          <!-- Notifications -->
-          <button class="inline-flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-100" aria-label="Notifications" title="Notifications">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-          </button>
-          <!-- Profile -->
-          <div class="w-8 h-8 rounded-full bg-slate-200" title="Profile"></div>
-        </div>
-      </header>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-      <div class="flex flex-1 min-h-0">
-        <!-- Sidebar (fixed) -->
-        <aside id="sc-sidebar" class="fixed top-16 bottom-0 left-0 border-r border-slate-200 bg-white transition-[width] duration-200 ease-in-out overflow-y-auto pt-2 pb-4">
-          <nav class="pb-6">
-            <ul class="space-y-2">
-              <!-- group heading -->
-              <li class="px-3 py-2 text-xs uppercase tracking-wide text-slate-500">Main</li>
-              <li>@include('partials.navitem', [
-                'route' => 'confessions',
-                'href' => route('confessions'),
-                'label' => 'Confessions',
-                'iconPngBw' => 'icons/png/confession bw.png',
-                'iconPngCol' => 'icons/png/confession col.png',
-              ])</li>
-              <li>@include('partials.navitem', [
-                'route' => 'marketplace',
-                'href' => route('marketplace'),
-                'label' => 'Marketplace',
-                'iconPngBw' => 'icons/png/marketplace bw.png',
-                'iconPngCol' => 'icons/png/marketplace col.png',
-              ])</li>
-              <li>@include('partials.navitem', [
-                'route' => 'events',
-                'href' => route('events'),
-                'label' => 'Events & Notices',
-                'iconPngBw' => 'icons/png/event bw.png',
-                'iconPngCol' => 'icons/png/event col.png',
-              ])</li>
-              <li>@include('partials.navitem', [
-                'route' => 'lost-found',
-                'href' => route('lost-found'),
-                'label' => 'Lost & Found',
-                'iconPngBw' => 'icons/png/lost-and-found bw.png',
-                'iconPngCol' => 'icons/png/lost-and-found col.png',
-              ])</li>
+    <!-- Static Assets (no build) -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ @filemtime(public_path('css/app.css')) }}">
+    <script defer src="{{ asset('js/app.js') }}?v={{ @filemtime(public_path('js/app.js')) }}"></script>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="main-header">
+        <nav class="header-nav">
+            <div class="nav-container">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-dropdown="features">
+                            Features
+                            <span class="dropdown-arrow">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6,9 12,15 18,9"></polyline>
+                                </svg>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-dropdown="community">
+                            Community
+                            <span class="dropdown-arrow">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6,9 12,15 18,9"></polyline>
+                                </svg>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-dropdown="services">
+                            Services
+                            <span class="dropdown-arrow">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6,9 12,15 18,9"></polyline>
+                                </svg>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-              <li class="mt-5 px-3 py-2 text-xs uppercase tracking-wide text-slate-500">Campus</li>
-              <li>@include('partials.navitem', [
-                'route' => 'stayconnect',
-                'href' => route('stayconnect'),
-                'label' => 'StayConnect',
-                'iconPngBw' => 'icons/png/house bw.png',
-                'iconPngCol' => 'icons/png/house col.png',
-              ])</li>
-              <li>@include('partials.navitem', [
-                'route' => 'carpooling',
-                'href' => route('carpooling'),
-                'label' => 'Carpooling',
-                'iconPngBw' => 'icons/png/carpool bw.png',
-                'iconPngCol' => 'icons/png/carpool col.png',
-              ])</li>
-            </ul>
-          </nav>
-        </aside>
+        <!-- Dropdown Menus -->
+        <div class="dropdown-container">
+            <div id="features-dropdown" class="dropdown-panel" style="display: none;">
+                <div class="dropdown-content">
+                    <div class="dropdown-section">
+                        <h4 class="dropdown-section-title">FEATURES</h4>
+                        <div class="dropdown-items">
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Anonymous Confessions</div>
+                                <div class="link-description">Share thoughts anonymously</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Student Marketplace</div>
+                                <div class="link-description">Buy and sell campus items</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Campus Events</div>
+                                <div class="link-description">Never miss any event</div>
+                            </a>
+                        </div>
+                    </div>
 
-        <!-- Main scrollable content wrapper -->
-  <div class="flex-1 transition-[margin] duration-200 ease-in-out min-h-0 flex flex-col" id="sc-scrollwrap">
-          <main id="sc-main" class="flex-1 min-w-0 p-4 md:p-6">
-            @yield('content')
-          </main>
-          <!-- Footer -->
-          <footer class="border-t border-slate-200 bg-white/80 backdrop-blur px-4">
-        <div class="max-w-7xl mx-auto py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-sm">
-          <div class="text-slate-600">
-            <div class="font-medium text-slate-800">ShooliniCentral</div>
-            <p class="max-w-xl text-slate-500">A student-driven portal to share confessions, discover events, trade in the marketplace, and stay connected across campus. Built to bring the community together.</p>
-          </div>
-          <nav class="flex flex-wrap items-center gap-x-6 gap-y-2 text-slate-600">
-            <a href="{{ route('about') }}" class="hover:text-slate-900">About</a>
-            <a href="{{ route('contact') }}" class="hover:text-slate-900">Contact</a>
-            <a href="{{ route('developer') }}" class="hover:text-slate-900">Developer</a>
-            <a href="{{ route('sitemap') }}" class="hover:text-slate-900">Sitemap</a>
-            <a href="#" class="hover:text-slate-900">Privacy</a>
-            <a href="#" class="hover:text-slate-900">Terms</a>
-          </nav>
+                    <div class="dropdown-section">
+                        <h4 class="dropdown-section-title">CORE TOOLS</h4>
+                        <div class="dropdown-items">
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Student Directory</div>
+                                <div class="link-description">Connect with classmates</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Academic Resources</div>
+                                <div class="link-description">Study materials and notes</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Discussion Forums</div>
+                                <div class="link-description">Academic discussions</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="community-dropdown" class="dropdown-panel" style="display: none;">
+                <div class="dropdown-content">
+                    <div class="dropdown-section">
+                        <h4 class="dropdown-section-title">COMMUNITY</h4>
+                        <div class="dropdown-items">
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Lost & Found</div>
+                                <div class="link-description">Recover lost items</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Ride Sharing</div>
+                                <div class="link-description">Share rides and save money</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Study Groups</div>
+                                <div class="link-description">Find study partners</div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown-section">
+                        <h4 class="dropdown-section-title">SOCIAL HUB</h4>
+                        <div class="dropdown-items">
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Campus Social</div>
+                                <div class="link-description">Connect and socialize</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Interest Groups</div>
+                                <div class="link-description">Join hobby communities</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Mentorship</div>
+                                <div class="link-description">Guide and be guided</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="services-dropdown" class="dropdown-panel" style="display: none;">
+                <div class="dropdown-content">
+                    <div class="dropdown-section">
+                        <h4 class="dropdown-section-title">SERVICES</h4>
+                        <div class="dropdown-items">
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Accommodation Hub</div>
+                                <div class="link-description">Find rooms and roommates</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Student Support</div>
+                                <div class="link-description">Get help and guidance</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Career Center</div>
+                                <div class="link-description">Job and internship portal</div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown-section">
+                        <h4 class="dropdown-section-title">ADMINISTRATION</h4>
+                        <div class="dropdown-items">
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Document Requests</div>
+                                <div class="link-description">Certificates and transcripts</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Fee Payments</div>
+                                <div class="link-description">Online payment portal</div>
+                            </a>
+                            <a href="#" class="dropdown-link">
+                                <div class="link-title">Academic Calendar</div>
+                                <div class="link-description">Important dates and deadlines</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="max-w-7xl mx-auto pb-6 flex items-center justify-between text-xs text-slate-500">
-          <div>© {{ date('Y') }} ShooliniCentral • Made by <span class="font-semibold">THE ARCHITECT</span></div>
-          <div class="text-slate-400">v{{ config('app.version', '1.0') }}</div>
-        </div>
-          </footer>
-        </div>
-      </div>
-    </div>
-  </body>
-  @include('partials.sidebar-script')
-  <script>
-    // Focus search with Ctrl+K (or Cmd+K on macOS)
-    window.addEventListener('keydown', function(e) {
-      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-      if ((isMac ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        const input = document.getElementById('site-search');
-        if (input) {
-          e.preventDefault();
-          input.focus();
-          input.select();
-        }
-      }
-    });
-  </script>
+    </header>
+
+    @yield('content')
+</body>
 </html>
