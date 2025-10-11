@@ -55,6 +55,69 @@
     @keyframes fade-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes focus-in { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
 </style>
+    <style>
+        /* Testimonials Carousel (tc-*) */
+        .tc-section { background:#000000; min-height:100vh; display:flex; align-items:center; }
+        .tc-container { width:100%; max-width:1400px; margin:0 auto; padding:128px 24px; font-family: system-ui, -apple-system, sans-serif; }
+        .tc-grid { display:grid; grid-template-columns:1fr; gap:80px; align-items:start; }
+        @media (min-width:1024px){ .tc-grid{ grid-template-columns: 1fr 1fr; gap:120px; } }
+
+        /* Left column: stacked cards */
+        .tc-left { display:flex; justify-content:center; }
+        @media (min-width:1024px){ .tc-left{ justify-content:flex-start; } }
+            .tc-left-wrap { position:relative; width:100%; max-width:600px; height:500px; }
+            @media (max-width:1023.98px){ .tc-left-wrap{ height:450px; } }
+            .tc-deck { position:absolute; inset:0; pointer-events:none; }
+            .tc-deck-card { position:absolute; top:0; left:0; width:100%; height:100%; background:#000000; border:1px solid #dc2626; border-radius:16px; opacity:0.25; }
+            .tc-deck-card.d1 { transform: translate(-10px, -10px) scale(0.99); }
+            .tc-deck-card.d2 { transform: translate(-20px, -20px) scale(0.98); opacity:0.2; }
+            .tc-deck-card.d3 { transform: translate(-30px, -30px) scale(0.97); opacity:0.15; }
+            .tc-deck-card.d4 { transform: translate(-40px, -40px) scale(0.96); opacity:0.1; }
+            .tc-stack { position:absolute; inset:0; }
+            .tc-card { position:absolute; top:0; left:0; width:100%; height:100%; background:#000000; border:1px solid #dc2626; border-radius:16px; padding:48px; display:flex; flex-direction:column; transition: all 600ms cubic-bezier(0.4,0,0.2,1); cursor:pointer; }
+        @media (max-width:1023.98px){ .tc-card{ padding:32px; } }
+            .tc-card:hover { border-color:#dc2626; transform: translateY(-2px); transition: all 300ms ease; }
+
+        /* Card content */
+        .tc-company { display:flex; align-items:center; gap:8px; height:32px; margin-bottom:32px; color:#ffffff; font-size:20px; font-weight:700; }
+        .tc-company .tc-logo { width:32px; height:32px; background:#dc2626; border-radius:6px; flex:0 0 32px; }
+        .tc-quote { color:#d4d4d8; font-size:18px; font-weight:400; line-height:1.7; margin-bottom:40px; }
+        .tc-author { margin-top:auto; padding-top:24px; border-top:1px solid #18181b; display:flex; align-items:center; gap:16px; }
+        .tc-avatar { width:56px; height:56px; border-radius:50%; border:2px solid #27272a; overflow:hidden; filter: grayscale(100%); flex:0 0 56px; }
+        .tc-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+        .tc-author-meta { display:flex; flex-direction:column; }
+        .tc-author-name { color:#ffffff; font-size:16px; font-weight:600; margin-bottom:4px; }
+        .tc-author-role { color:#71717a; font-size:14px; font-weight:400; }
+
+        /* Right column: content */
+        .tc-right { color:#ffffff; }
+        .tc-tag { font-size:14px; font-weight:600; color:#dc2626; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px; }
+        .tc-title { font-weight:700; letter-spacing:-0.025em; line-height:1.1; color:#ffffff; margin-bottom:24px; font-size:56px; }
+        .tc-desc { color:#a1a1aa; font-size:18px; line-height:1.7; max-width:600px; margin-bottom:48px; }
+        @media (max-width:1023.98px){ .tc-title{ font-size:40px; } .tc-desc{ font-size:16px; } }
+        @media (min-width:1024px){ .tc-title{ font-size:72px; } }
+
+        /* Nav buttons */
+        .tc-nav { display:flex; align-items:center; gap:16px; }
+        .tc-btn { width:56px; height:56px; border:1px solid #27272a; border-radius:28px; background:transparent; color:#ffffff; display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; overflow:hidden; transition:border-color 300ms ease, transform 100ms ease; }
+        .tc-btn:active { transform: scale(0.95); }
+        .tc-btn::before { content:""; position:absolute; inset:0; background:#ffffff; transform: scale(0); transition: transform 300ms ease; z-index:0; }
+        .tc-btn:hover { border-color:#ffffff; }
+        .tc-btn:hover::before { transform: scale(1); }
+        .tc-btn svg { width:20px; height:20px; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; position:relative; z-index:1; }
+        .tc-btn:hover svg { color:#000000; }
+
+            /* Shuffle animation */
+            @keyframes deck-shuffle {
+                0% { transform: translate(-20px, -20px) rotate(-1deg); }
+                50% { transform: translate(-10px, -10px) rotate(0.5deg); }
+                100% { transform: translate(-20px, -20px) rotate(0deg); }
+            }
+            .tc-shuffle .tc-deck-card.d1 { animation: deck-shuffle 300ms ease; }
+            .tc-shuffle .tc-deck-card.d2 { animation: deck-shuffle 300ms ease 30ms; }
+            .tc-shuffle .tc-deck-card.d3 { animation: deck-shuffle 300ms ease 60ms; }
+            .tc-shuffle .tc-deck-card.d4 { animation: deck-shuffle 300ms ease 90ms; }
+    </style>
 @endsection
 
 @section('content')
@@ -302,6 +365,107 @@
         </div>
     </div>
 </section>
+
+<!-- Testimonials Carousel Section -->
+<section class="tc-section" id="testimonials">
+    <div class="tc-container">
+        <div class="tc-grid">
+            <!-- Left: Stacked Cards -->
+                    <div class="tc-left">
+                        <div class="tc-left-wrap" id="tc-left-wrap">
+                            <div class="tc-deck" aria-hidden="true">
+                                <div class="tc-deck-card d1"></div>
+                                <div class="tc-deck-card d2"></div>
+                                <div class="tc-deck-card d3"></div>
+                                <div class="tc-deck-card d4"></div>
+                            </div>
+                            <div class="tc-stack" id="tc-stack" aria-live="polite">
+                    <!-- Card 1 -->
+                    <article class="tc-card" tabindex="0">
+                        <div class="tc-company"><span class="tc-logo" aria-hidden="true"></span> SIMPLETIRE</div>
+                        <p class="tc-quote">"Working with NEST has been an exceptional experience. Their support in launching our payment platform and assisting our team in ensuring everything ran smoothly post-integration has been invaluable. We are grateful for and look forward to our continued partnership!"</p>
+                        <div class="tc-author">
+                            <div class="tc-avatar" aria-hidden="true"><img alt="" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='20' r='10' fill='%233f3f46'/><rect x='10' y='34' width='36' height='14' rx='7' fill='%233f3f46'/></svg>"></div>
+                            <div class="tc-author-meta">
+                                <div class="tc-author-name">Max Zagor</div>
+                                <div class="tc-author-role">DTC eCommerce Manager, SimpleTire</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 2 -->
+                    <article class="tc-card" tabindex="0">
+                        <div class="tc-company"><span class="tc-logo" aria-hidden="true"></span> TECHCORP</div>
+                        <p class="tc-quote">"NEST transformed how our team collaborates. The interface is so intuitive that onboarding new members takes minutes, not days. We've seen a 40% increase in productivity since switching. The attention to detail is remarkable."</p>
+                        <div class="tc-author">
+                            <div class="tc-avatar" aria-hidden="true"><img alt="" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='20' r='10' fill='%233f3f46'/><rect x='10' y='34' width='36' height='14' rx='7' fill='%233f3f46'/></svg>"></div>
+                            <div class="tc-author-meta">
+                                <div class="tc-author-name">Sarah Chen</div>
+                                <div class="tc-author-role">Product Lead at TechCorp</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 3 -->
+                    <article class="tc-card" tabindex="0">
+                        <div class="tc-company"><span class="tc-logo" aria-hidden="true"></span> HEALTHTECH</div>
+                        <p class="tc-quote">"The security features give us complete peace of mind. Enterprise-grade encryption, detailed audit logs, and compliance certifications—all without sacrificing usability. It's exactly what we needed."</p>
+                        <div class="tc-author">
+                            <div class="tc-avatar" aria-hidden="true"><img alt="" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='20' r='10' fill='%233f3f46'/><rect x='10' y='34' width='36' height='14' rx='7' fill='%233f3f46'/></svg>"></div>
+                            <div class="tc-author-meta">
+                                <div class="tc-author-name">Dr. Aisha Patel</div>
+                                <div class="tc-author-role">CTO at HealthTech Solutions</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 4 -->
+                    <article class="tc-card" tabindex="0">
+                        <div class="tc-company"><span class="tc-logo" aria-hidden="true"></span> STARTUPHUB</div>
+                        <p class="tc-quote">"ROI was immediate. We've cut tool costs by 60% and improved team satisfaction scores across the board. NEST delivers on every promise. Finally, a tool that doesn't get in the way of actual work."</p>
+                        <div class="tc-author">
+                            <div class="tc-avatar" aria-hidden="true"><img alt="" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='20' r='10' fill='%233f3f46'/><rect x='10' y='34' width='36' height='14' rx='7' fill='%233f3f46'/></svg>"></div>
+                            <div class="tc-author-meta">
+                                <div class="tc-author-name">David Park</div>
+                                <div class="tc-author-role">CEO at StartupHub</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Card 5 -->
+                    <article class="tc-card" tabindex="0">
+                        <div class="tc-company"><span class="tc-logo" aria-hidden="true"></span> DESIGNCO</div>
+                        <p class="tc-quote">"We tried every collaboration platform out there. NEST is the only one that our entire team actually enjoys using. The design is beautiful and functional. It's become an essential part of our workflow."</p>
+                        <div class="tc-author">
+                            <div class="tc-avatar" aria-hidden="true"><img alt="" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='20' r='10' fill='%233f3f46'/><rect x='10' y='34' width='36' height='14' rx='7' fill='%233f3f46'/></svg>"></div>
+                            <div class="tc-author-meta">
+                                <div class="tc-author-name">James Kim</div>
+                                <div class="tc-author-role">Design Director at DesignCo</div>
+                            </div>
+                        </div>
+                                </article>
+                                </div>
+                            </div>
+            </div>
+
+            <!-- Right: Content + Nav -->
+            <div class="tc-right">
+                <div class="tc-tag">TESTIMONIALS</div>
+                <h3 class="tc-title">What Our Users Say</h3>
+                <p class="tc-desc">Real stories from teams who switched to NEST. Designed for clarity, built for speed, and refined until it disappears into your workflow. These are the results that matter.</p>
+                <div class="tc-nav">
+                    <button class="tc-btn" id="tc-prev" aria-label="Previous testimonial" type="button">
+                        <svg viewBox="0 0 24 24" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <button class="tc-btn" id="tc-next" aria-label="Next testimonial" type="button">
+                        <svg viewBox="0 0 24 24" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
 <!-- Footer -->
 <footer class="footer-section">
     <div class="container">
@@ -409,4 +573,58 @@
         if (dev) devObserver.observe(dev);
     })();
 </script>
+    <script>
+        // Testimonials Carousel logic
+            (function(){
+            const stack = document.getElementById('tc-stack');
+            if (!stack) return;
+            const cards = Array.from(stack.querySelectorAll('.tc-card'));
+            const prevBtn = document.getElementById('tc-prev');
+            const nextBtn = document.getElementById('tc-next');
+                const wrap = document.getElementById('tc-left-wrap');
+            let currentIndex = 0;
+
+            function applyState(card, {z, o, t}){
+                card.style.zIndex = String(z);
+                card.style.opacity = String(o);
+                card.style.transform = t;
+                card.style.pointerEvents = o > 0 ? 'auto' : 'none';
+            }
+
+            function updateCards(){
+                const n = cards.length;
+                for (let i=0;i<n;i++){
+                    const rel = (i - currentIndex + n) % n;
+                    if (rel === 0){ // front
+                        applyState(cards[i], { z:3, o:1, t:'translateY(0) translateX(0) scale(1)' });
+                    } else if (rel === 1){ // second
+                        applyState(cards[i], { z:2, o:0.7, t:'translateY(20px) translateX(20px) scale(0.95)' });
+                    } else if (rel === 2){ // third
+                        applyState(cards[i], { z:1, o:0.4, t:'translateY(40px) translateX(40px) scale(0.9)' });
+                    } else { // hidden
+                        applyState(cards[i], { z:0, o:0, t:'translateY(-60px) translateX(-60px) scale(0.85)' });
+                    }
+                }
+            }
+
+                function triggerShuffle(){
+                    if (!wrap) return;
+                    wrap.classList.add('tc-shuffle');
+                    setTimeout(()=> wrap.classList.remove('tc-shuffle'), 350);
+                }
+
+                function next(){ currentIndex = (currentIndex + 1) % cards.length; updateCards(); triggerShuffle(); }
+                function prev(){ currentIndex = (currentIndex - 1 + cards.length) % cards.length; updateCards(); triggerShuffle(); }
+
+            if (nextBtn) nextBtn.addEventListener('click', next);
+            if (prevBtn) prevBtn.addEventListener('click', prev);
+            // Keyboard support when a card is focused
+            stack.addEventListener('keydown', (e)=>{
+                if (e.key === 'ArrowRight') { next(); }
+                if (e.key === 'ArrowLeft') { prev(); }
+            });
+
+            updateCards();
+        })();
+    </script>
 @endsection
