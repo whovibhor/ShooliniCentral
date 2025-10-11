@@ -13,9 +13,9 @@
     @media (min-width: 768px) { .why2-container { padding-left: 48px; padding-right: 48px; } }
 
     /* Title Section */
-                .why2-section .why2-title { text-align: center; color: #ffffff; font-weight: 700; letter-spacing: -0.025em; line-height: 1; margin-bottom: 96px; font-size: 60px; }
-                @media (min-width: 768px) { .why2-section .why2-title { font-size: 72px; } }
-                @media (min-width: 1024px) { .why2-section .why2-title { font-size: 96px; } }
+                .why2-section .why2-title { text-align: center; color: #ffffff; font-weight: 700; letter-spacing: -0.025em; line-height: 1; margin-bottom: 96px; font-size: 72px; }
+                @media (max-width:1199.98px){ .why2-section .why2-title { font-size: 48px; } }
+                @media (max-width:767.98px){ .why2-section .why2-title { font-size: 36px; } }
     #why-nest-word { display: inline-block; cursor: default; animation: pulse-breathing 3s ease-in-out infinite; transition: color 500ms ease; }
     #why-nest-word:hover { color: #dc2626; }
 
@@ -48,6 +48,7 @@
     .why2-card.animate-in { animation: fade-up 800ms ease-out forwards; }
     .why2-dev.animate-in { animation: fade-up 600ms ease-out forwards; }
     .why2-dev p.animate-in { animation: focus-in 750ms ease-out forwards; }
+    .why2-dev p.dir-up.animate-in { animation: fade-down 600ms ease-out forwards; }
     .why2-signature.animate-in { animation: fade-up 600ms ease-out forwards; }
     /* Direction override for scroll-up */
     .why2-dev.dir-up.animate-in { animation: fade-down 600ms ease-out forwards; }
@@ -58,6 +59,11 @@
     @keyframes fade-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes focus-in { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
     @keyframes fade-down { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Features title: match Wall of Love scale */
+    .features-section .section-title { font-size: 72px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+    @media (max-width:1199.98px){ .features-section .section-title { font-size: 48px; } }
+    @media (max-width:767.98px){ .features-section .section-title { font-size: 36px; } }
 </style>
     <!-- Removed Testimonials Carousel styles -->
     <style>
@@ -91,7 +97,8 @@
     .wl-scroller::before { left:0; background: linear-gradient(90deg, #000 0%, rgba(0,0,0,0) 100%); }
     .wl-scroller::after { right:0; background: linear-gradient(270deg, #000 0%, rgba(0,0,0,0) 100%); }
 
-    .wl-track { display:flex; padding: 10px; align-items:stretch; gap:24px; will-change: transform; animation: wl-marquee var(--wl-marquee-duration, 60s) linear infinite; }
+    .wl-scroller { padding: 10px 0; }
+    .wl-track { display:flex; align-items:stretch; gap:24px; will-change: transform; animation: wl-marquee var(--wl-marquee-duration, 60s) linear infinite; }
     .wl-track.wl-track--reverse { animation-direction: reverse; }
     @media (max-width:767.98px){ .wl-track{ gap:16px; } }
 
@@ -129,6 +136,16 @@
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Accessibility: focus-visible ring for keyboard users */
+    :where(a, button, .cta-btn, .features-section a, .footer-section a):focus-visible { outline: 2px solid #dc2626; outline-offset: 3px; }
+
+        /* Reduced motion preferences */
+        @media (prefers-reduced-motion: reduce){
+            .cta-btn { transition: none; }
+            .cta-btn:hover { transform: none; box-shadow: none; }
+            .why2-card.animate-in, .why2-dev.animate-in, .why2-dev p.animate-in, .why2-signature.animate-in { animation-duration: 400ms !important; }
         }
 
     /* CTA Section */
@@ -416,7 +433,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"NEST makes campus life simple. I found a used textbook in minutes and sold my old one the same day."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Aanya Sharma" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Aanya Sharma</div><div class="tc-role">B.Tech CSE, 2nd Year</div></div>
                             </div>
                         </article>
@@ -424,7 +441,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"The events calendar is a lifesaver. I don’t miss club deadlines anymore, and RSVPs are super quick."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Rohan Verma" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Rohan Verma</div><div class="tc-role">MBA, Marketing</div></div>
                             </div>
                         </article>
@@ -432,7 +449,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"I matched with a roommate through NEST’s accommodation hub. Verified listings made it stress-free."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Priya Mehta" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Priya Mehta</div><div class="tc-role">Biotechnology, 3rd Year</div></div>
                             </div>
                         </article>
@@ -440,7 +457,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"Ride sharing on NEST is brilliant. Safer, cheaper, and I’ve met great people on the same route."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Karan Singh" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Karan Singh</div><div class="tc-role">MCA, 1st Year</div></div>
                             </div>
                         </article>
@@ -448,7 +465,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"Confessions feel safe and well-moderated. It’s an honest space that still respects boundaries."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Neha Gupta" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Neha Gupta</div><div class="tc-role">Design Club Lead</div></div>
                             </div>
                         </article>
@@ -456,7 +473,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"From books to gadgets, the marketplace helped me save money without leaving campus."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Aditya Rao" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Aditya Rao</div><div class="tc-role">ECE, 4th Year</div></div>
                             </div>
                         </article>
@@ -469,7 +486,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"NEST centralizes what students actually use. It’s faster to communicate updates and reduce clutter in groups."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Prof. Meera Kapoor" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Prof. Meera Kapoor</div><div class="tc-role">Assistant Professor, CSE</div></div>
                             </div>
                         </article>
@@ -477,7 +494,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"From counseling to clubs, NEST gives a real-time pulse of campus. It’s improved participation across fests."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Dr. Anil Bhatia" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Dr. Anil Bhatia</div><div class="tc-role">Dean, Student Affairs</div></div>
                             </div>
                         </article>
@@ -485,7 +502,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"Our placement notices reach students instantly through NEST. Communication is clearer and timely."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Ms. Ritu Malhotra" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Ms. Ritu Malhotra</div><div class="tc-role">Placement Coordinator</div></div>
                             </div>
                         </article>
@@ -493,7 +510,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"The entrepreneur cell uses NEST to announce sessions and connect mentors with students seamlessly."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Prof. Arjun Sethi" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Prof. Arjun Sethi</div><div class="tc-role">Faculty Advisor, E-Cell</div></div>
                             </div>
                         </article>
@@ -501,7 +518,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"I wish we had NEST back in 2019. It’s the kind of tool that makes campus feel connected and efficient."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Mr. Sahil Khanna" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Mr. Sahil Khanna</div><div class="tc-role">Alumni, 2019</div></div>
                             </div>
                         </article>
@@ -509,7 +526,7 @@
                         <article class="testimonial-card">
                             <p class="tc-text">"Clean design and quick load times. NEST respects attention and helps students focus on what matters."</p>
                             <div class="tc-footer">
-                                <div class="tc-avatar"><img alt="Avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
+                                <div class="tc-avatar"><img alt="Dr. Kavya Iyer" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'><rect width='56' height='56' fill='%2327272a'/><circle cx='28' cy='22' r='10' fill='%233f3f46'/><rect x='14' y='34' width='28' height='10' rx='5' fill='%233f3f46'/></svg>"></div>
                                 <div class="tc-meta"><div class="tc-name">Dr. Kavya Iyer</div><div class="tc-role">Associate Professor, Management</div></div>
                             </div>
                         </article>
@@ -522,7 +539,7 @@
     <!-- CTA Section -->
     <section class="cta-section" id="cta">
         <div class="cta-container">
-            <a href="#" class="cta-btn">Visit Dashboard</a>
+            <a href="/explore" class="cta-btn" aria-label="Explore NEST features">Visit Dashboard</a>
             <h3 class="cta-title">Your campus. Your people. Your space</h3>
         </div>
     </section>
@@ -621,9 +638,11 @@
                     if (scrollingUp) {
                         dev.classList.add('dir-up');
                         sig.classList.add('dir-up');
+                        paras.forEach(p=>p.classList.add('dir-up'));
                     } else {
                         dev.classList.remove('dir-up');
                         sig.classList.remove('dir-up');
+                        paras.forEach(p=>p.classList.remove('dir-up'));
                     }
 
                     // Play sequence relative to entry
@@ -676,6 +695,7 @@
                 };
 
                 const setupRow = (scroller) => {
+                    if (scroller.dataset.initialized === 'true') return;
                     const track = scroller.querySelector('.wl-track');
                     if (!track) return;
                     const style = getComputedStyle(track);
@@ -713,6 +733,7 @@
                     };
                     media.addEventListener ? media.addEventListener('change', applyMotionPref) : media.addListener(applyMotionPref);
                     applyMotionPref();
+                    scroller.dataset.initialized = 'true';
                 };
 
                 scrollers.forEach(setupRow);
