@@ -130,6 +130,19 @@
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(5deg); }
         }
+
+    /* CTA Section */
+    .cta-section { background:#000; border-top:1px solid #111; border-bottom:1px solid #111; }
+    .cta-container { max-width:1200px; margin:0 auto; padding:60px 24px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:60px; text-align:center; }
+    @media (max-width: 767.98px){ .cta-container { padding:72px 24px; gap:16px; } }
+
+    .cta-btn { display:inline-flex; align-items:center; justify-content:center; padding:14px 32px; border-radius:14px; border:1px solid #dc2626; color:#ffffff; font-weight:700; letter-spacing:0.02em; text-decoration:none; background: rgba(220,38,38,0.06); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 180ms ease, box-shadow 180ms ease, transform 120ms ease; }
+    .cta-btn:hover { background: rgba(220,38,38,0.18); box-shadow: 0 8px 28px rgba(220,38,38,0.25); transform: translateY(-1px); }
+    .cta-btn:active { transform: translateY(0); box-shadow: 0 4px 18px rgba(220,38,38,0.2); }
+
+    .cta-title { font-weight:800; letter-spacing:-0.02em; line-height:1.1; color:#fff; font-size:44px; }
+    @media (min-width: 1200px){ .cta-title { font-size:60px; } }
+    @media (max-width: 767.98px){ .cta-title { font-size:32px; } }
     </style>
 @endsection
 
@@ -503,6 +516,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="cta">
+        <div class="cta-container">
+            <a href="#" class="cta-btn">Explore</a>
+            <h3 class="cta-title">Your campus. Your people. Your space</h3>
         </div>
     </section>
 
