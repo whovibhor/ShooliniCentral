@@ -2,11 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Homepage route
-Route::get('/', function () {
+// Landing page is served at /home
+Route::get('/home', function () {
     return view('home');
 })->name('home');
 
-Route::get('/home', function () {
-    return redirect('/');
+// Redirect root to /home
+Route::get('/', function () {
+    return redirect('/home');
 });
