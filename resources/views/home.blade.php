@@ -522,7 +522,7 @@
     <!-- CTA Section -->
     <section class="cta-section" id="cta">
         <div class="cta-container">
-            <a href="#" class="cta-btn">Explore</a>
+            <a href="#" class="cta-btn">Visit Dashboard</a>
             <h3 class="cta-title">Your campus. Your people. Your space</h3>
         </div>
     </section>
