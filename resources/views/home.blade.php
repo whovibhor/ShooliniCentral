@@ -186,50 +186,7 @@
     </div>
 </section>
 
-<!-- Why NEST Section -->
-<section class="why-section" id="why">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Why NEST</h2>
-            <p class="section-subtitle">Built for Shoolini students to make campus life simpler, safer, and more connected—all in one place.</p>
-        </div>
 
-        <div class="why-list">
-            <div class="why-card">
-                <div class="why-head">
-                    <div class="why-icon">🎓</div>
-                    <h3 class="why-title">Built for Shoolini</h3>
-                </div>
-                <p class="why-text">Every feature is designed around real student needs—from classes to campus events to community life.</p>
-            </div>
-
-            <div class="why-card">
-                <div class="why-head">
-                    <div class="why-icon">🛡️</div>
-                    <h3 class="why-title">Safe & Moderated</h3>
-                </div>
-                <p class="why-text">Anonymity where it matters, with strong reporting and review to keep the community respectful.</p>
-            </div>
-
-            <div class="why-card">
-                <div class="why-head">
-                    <div class="why-icon">🧭</div>
-                    <h3 class="why-title">Everything in One Hub</h3>
-                </div>
-                <p class="why-text">Confessions, marketplace, events, rides, and rooms—no more juggling multiple groups and apps.</p>
-            </div>
-
-            <div class="why-card">
-                <div class="why-head">
-                    <div class="why-icon">⚡</div>
-                    <h3 class="why-title">Fast & Lightweight</h3>
-                </div>
-                <p class="why-text">Snappy experience with a clean, minimal UI that works great on campus networks.</p>
-            </div>
-        </div>
-    </div>
-
-</section>
 
 <!-- Footer -->
 <footer class="footer-section">

@@ -15,6 +15,8 @@
             this.setupSmoothScrolling();
             this.setupRollingTitle();
             this.setupCountUpStats();
+            this.setupWhyReveal();
+            this.setupWhyParallax();
         }
 
         setupDropdownNavigation() {
@@ -47,6 +49,52 @@
                 const insideHeader = e.target.closest('.main-header');
                 if (!insideHeader) this.closeAllDropdowns();
             });
+        }
+
+        // Staggered reveal for Why NEST cards
+        setupWhyReveal() {
+            const cards = document.querySelectorAll('.why-list .why-card, .why-articles .why-article, .why-grid .why-benefit');
+            if (!cards.length) return;
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('why-visible');
+                    } else {
+                        // Remove to allow re-animate on re-entry
+                        entry.target.classList.remove('why-visible');
+                    }
+                });
+            }, { threshold: 0.2 });
+            cards.forEach((c) => obs.observe(c));
+        }
+
+        // Parallax effects for Why NEST section
+        setupWhyParallax() {
+            const section = document.querySelector('.why-section');
+            if (!section) return;
+
+            const parallaxEls = section.querySelectorAll('[data-parallax]');
+            const onScroll = () => {
+                const rect = section.getBoundingClientRect();
+                const vh = window.innerHeight || document.documentElement.clientHeight;
+                // Visible progress: 0 at entering, 1 at leaving
+                const start = Math.min(1, Math.max(0, 1 - rect.top / vh));
+                parallaxEls.forEach((el) => {
+                    const speedAttr = el.getAttribute('speed');
+                    const speed = speedAttr ? parseFloat(speedAttr) : 0;
+                    const rotate = parseFloat(el.getAttribute('data-rotate') || '0');
+                    const ty = start * speed; // px offset multiplier
+                    const transform = `translateY(${ty}px) rotate(${rotate ? rotate * (start) : 0}deg)`;
+                    el.style.transform = transform;
+                    el.style.willChange = 'transform';
+                    el.style.transition = 'transform 0.1s ease-out';
+                });
+            };
+
+            // Initial and scroll updates
+            onScroll();
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
         }
 
         closeAllDropdowns() {
