@@ -16,6 +16,8 @@
     <!-- Static Assets (no build) -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ @filemtime(public_path('css/app.css')) }}">
     <script defer src="{{ asset('js/app.js') }}?v={{ @filemtime(public_path('js/app.js')) }}"></script>
+
+    @yield('head')
 </head>
 <body>
     <!-- Header Navigation -->
@@ -188,5 +190,7 @@
     </header>
 
     @yield('content')
+
+    @yield('scripts')
 </body>
 </html>
