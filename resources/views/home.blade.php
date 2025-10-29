@@ -539,7 +539,7 @@
     <!-- CTA Section -->
     <section class="cta-section" id="cta">
         <div class="cta-container">
-            <a href="/explore" class="cta-btn" aria-label="Explore NEST features">Visit Dashboard</a>
+            <a href="/dashboard" class="cta-btn" aria-label="Explore NEST features">Visit Dashboard</a>
             <h3 class="cta-title">Your campus. Your people. Your space</h3>
         </div>
     </section>
