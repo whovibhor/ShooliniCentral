@@ -21,6 +21,8 @@
 </head>
 <body>
     <!-- Header Navigation -->
+    @hasSection('hide_header')
+    @else
     <header class="main-header">
         <nav class="header-nav">
             <div class="nav-container">
@@ -188,8 +190,15 @@
             </div>
         </div>
     </header>
+    @endif
 
     @yield('content')
+
+    @hasSection('footer')
+        @yield('footer')
+    @else
+        @includeIf('partials.footer-section')
+    @endif
 
     @yield('scripts')
 </body>
